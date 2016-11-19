@@ -1,0 +1,72 @@
+#include "../includes/ft_ls.h"
+#include <stdio.h>
+
+char	*ft_display_filetype(struct stat sb)
+{
+	int	mask;
+
+	mask = (sb.st_mode & S_IFMT);
+	if (S_ISBLK(mask))
+		return ("Block device");
+	if (S_ISCHR(mask))
+		return ("Character device");
+	if (S_ISDIR(mask))
+		return ("Directory");
+	if (S_ISFIFO(mask))
+		return ("FIFO/pipe");
+	if (S_ISLNK(mask))
+		return ("Symlink");
+	if (S_ISREG(mask))
+		return ("Regular file");
+	if (S_ISSOCK(mask))
+		return ("Socket");
+	return (NULL);
+}
+
+char	*ft_clean(char *ctime)
+{
+	ctime[ft_strlen(ctime)] = '\0';
+	return (ctime);
+}
+
+void	ft_display_stat(char *pathname, struct stat sb)
+{
+	ft_printf("%s% d% ld% ld% ld% lld %s %s\n", ft_display_filetype(sb), sb.st_mode, (long) sb.st_nlink, (long) sb.st_uid, (long) sb.st_gid, (long long) sb.st_size, ft_clean(ctime(&sb.st_mtime)), pathname);
+	/*ft_printf("Link count:%ld\n", (long) sb.st_nlink);
+	ft_printf("Ownership:%30ld\n", (long) sb.st_uid);
+	ft_printf("Group:%30ld\n", (long) sb.st_gid);
+	ft_printf("File size:%30lld bytes\n", (long long) sb.st_size);
+	ft_printf("Last file modification:%30s", ctime(&sb.st_mtime));*/
+}
+
+void	ft_display_info(char *pathname)
+{
+	struct	stat	sb;
+
+	if (pathname[0] != '.')
+	{
+		stat(pathname, &sb);
+		ft_display_stat(pathname, sb);
+	}
+}
+
+void	ft_display_dirent(char *pathname)
+{
+	DIR	*dir;
+	struct dirent *dirent;
+
+	dir = opendir(pathname);
+	while ((dirent = readdir(dir)))
+	{
+		ft_display_info(dirent->d_name);
+		dirent = NULL;
+	}
+	closedir(dir);
+}
+
+int	main(void)
+{
+	ft_display_dirent(".");
+
+	return (0);
+}

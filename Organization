@@ -1,0 +1,37 @@
+			Ft_ls
+
+			PART 1
+
+ls : List information about the FILEs (current directory by default)
+     Sort entries alphabetically without flags
+
+-l : Use a long listing format
+
+-R, --recursive : List subdirectories recursively
+
+-a, --all : Dot not igone entries startint with '.'
+
+-r, --reverse : Reverse order while sorting
+
+-t, --time : Sort by modification time, newest first
+
+			BONUS
+
+-u : Sort by acces time, newest first
+     With -lt : sort by, and show access time
+     With -l : show acces time and sort by name
+
+-f : Dot not sort, enable -aU, disable -ls --colore
+
+-g : Like -l, but do not list owner
+
+-h, --human-readable : print human readable size
+
+-S : Sort by file size, largest first
+
+-G, --no-group : Don't print group names
+
+-X : Sort alphabetically by entry extension
+
+--author : print the autor of each file
+     
