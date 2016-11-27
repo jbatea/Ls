@@ -1,6 +1,7 @@
 NAME		=	ft_ls
 
 SRC_NAME	=	main.c			\
+			my_check_args.c		\
 
 SRC		=	$(addprefix srcs/, $(SRC_NAME))
 
