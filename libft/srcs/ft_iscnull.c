@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../../includes/ft_printf.h"
 
 char		*ft_iscnull(char *s, t_lst *lst, int *tab)
 {

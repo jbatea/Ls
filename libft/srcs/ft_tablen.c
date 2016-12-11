@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../../includes/ft_printf.h"
 
 long long int	*ft_tablen(long long int *tab, double g, double n2)
 {

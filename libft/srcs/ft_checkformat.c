@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../../includes/ft_printf.h"
 
 int			ft_checkformat(const char *format, t_lst *lst)
 {

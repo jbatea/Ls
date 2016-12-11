@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "../../includes/ft_printf.h"
 
 char		*ft_ldup(char *tmp, int i, int j, char *str)
 {

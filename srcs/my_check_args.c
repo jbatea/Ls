@@ -1,27 +1,54 @@
 #include "../includes/ft_ls.h"
 
-void	my_init_flags(t_ls *ls, char *arg)
+void	my_on(int *i, int *j)
 {
-	ls->flags.listing = ft_strscmp(arg, "-l", "--listing") ? 0 : 1;
-	ls->flags.recursive = ft_strscmp(arg, "-R", "--recursive") ? 0 : 1;
-	ls->flags.reverse = ft_strscmp(arg, "-r", "--reverse") ? 0 : 1;
-	ls->flags.all = ft_strscmp(arg, "-a", "--all") ? 0 : 1;
-	ls->flags.time = ft_strscmp(arg, "-t", "--time") ? 0 : 1;
-}	
+	*i = 1;
+	*j = 1;
+}
 
-void	my_check_flags(int argc, char **argv, t_ls *ls)
+size_t	my_mode(char *arg)
 {
-	int	i;
+	struct	stat	sb;
 
-	i = 0;
-	while (i < argc)
+	stat(arg, &sb);
+	if ((S_ISREG(sb.st_mode) || S_ISDIR(sb.st_mode)))
+		return (1);
+	return (0);
+}
+
+size_t	my_flags(char *arg, t_ls *ls)
+{
+	int	n;
+
+	n = 0;
+	ft_strscmp(arg, "-l", "--listing") ? : my_on(&n , &ls->flags.listing);
+	ft_strscmp(arg, "-R", "--recursive") ? : my_on(&n , &ls->flags.recursive);
+	ft_strscmp(arg, "-r", "--reverse") ? : my_on(&n , &ls->flags.reverse);
+	ft_strscmp(arg, "-a", "--all") ? : my_on(&n , &ls->flags.all);
+	ft_strscmp(arg, "-t", "--time") ? : my_on(&n , &ls->flags.time);
+	if (!n & !my_mode(arg))
 	{
-		my_init_flags(ls, argv[i]);
-		i++;
+		ft_printf("ls: cannot access '%s': No such file or directory\n", arg);
+		ls->nberrors = ls->nberrors + 1;
+		ls->nbargs = ls->nbargs - 1;
 	}
+	if (n)
+	{
+		ls->nbflags = ls->nbflags + 1;
+		ls->nbargs = ls->nbargs - 1;
+	}
+	return (n);
 }
 
 void	my_check_args(int argc, char **argv, t_ls *ls)
 {
-	my_check_flags(argc, argv, ls);
+	int		i;
+
+	i = 1;
+	while (i < argc)
+	{
+		if (!my_flags(argv[i], ls) && my_mode(argv[i]))
+			my_add_files(ls, argv[i]);
+		i++;
+	}
 }
