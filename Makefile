@@ -2,9 +2,10 @@ NAME		=	ft_ls
 
 SRC_NAME	=	main.c			\
 			my_check_args.c		\
-			my_print_files.c	\
+			my_save_files.c	\
 			my_get_rights.c	\
 			my_add_files.c	\
+			my_print_files.c	\
 
 SRC		=	$(addprefix srcs/, $(SRC_NAME))
 

@@ -40,9 +40,15 @@ typedef	struct		s_info
 typedef struct		s_files
 {
 	char		*name;
-	t_info		info;
 	struct s_files	*next;
 }			t_files;
+
+typedef struct		s_path
+{
+	char		*path;
+	t_info		info;	
+	struct s_path	*next;
+}			t_path;
 
 typedef struct		s_ls
 {
@@ -51,11 +57,13 @@ typedef struct		s_ls
 	int		nberrors;
 	t_flags		flags;
 	t_files		*files;
+	t_path		*path;
 }			t_ls;
 
 void	my_check_args(int argc, char **argv, t_ls *ls);
-void	my_print_files(t_ls *ls);
+void	my_save_files(t_ls *ls);
 char	*my_get_rights(int mode);
 void	my_add_files(t_ls *ls, char *name);
+void	my_print_files(t_ls *ls);
 
 #endif
