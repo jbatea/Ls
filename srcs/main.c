@@ -1,28 +1,21 @@
 #include "../includes/ft_ls.h"
 
-void	my_init_ls(t_ls *ls, int argc)
+void	my_exit(char *error)
 {
-	ls->nbargs = argc - 1;
-	ls->nberrors = 0;
-	ls->nbflags = 0;
-	ls->files = NULL;
-	ls->path = NULL;
-	ls->flags.listing = 0;
-	ls->flags.recursive = 0;
-	ls->flags.reverse = 0;
-	ls->flags.all = 0;
-	ls->flags.time = 0;
+	if (error)
+		ft_printf("%s\n", error);
+	exit(EXIT_FAILURE);
 }
 
 int	main(int argc, char **argv)
 {
 	t_ls	ls;
 
-	my_init_ls(&ls, argc);
+	bzero(&ls, sizeof(ls));
+	ls.error.args = argc - 1;
 	my_check_args(argc, argv, &ls);
-	if (argc - 1 == ls.nbflags + ls.nberrors)
-		my_add_files(&ls, "."); 
+	if (argc - 1 == ls.error.flags + ls.error.errors)
+		my_add_files(&(ls.files), ".", false);
 	my_save_files(&ls);
-	my_print_files(&ls);
 	return (0);
 }

@@ -1,9 +1,15 @@
 #include "../includes/ft_ls.h"
 
-void	my_on(int *i, int *j)
+void	my_on(bool *i, bool *j)
 {
-	*i = 1;
-	*j = 1;
+	*i = true;
+	*j = true;
+}
+
+void	my_count(int *i, int *j)
+{
+	*i = *i + 1;
+	*j = *j - 1;
 }
 
 size_t	my_mode(char *arg)
@@ -17,28 +23,21 @@ size_t	my_mode(char *arg)
 	return (0);
 }
 
-void	my_count(int *i, int *j)
-{
-	*i = *i + 1;
-	*j = *j - 1;
-}
-
-void	my_error(t_ls *ls, int n, char *arg)
+void	my_error(t_ls *ls, bool n, char *arg)
 {
 	if (!n && !my_mode(arg))
 	{
 		ft_printf("ls: cannot access '%s': No such file or directory\n", arg);
-		my_count(&(ls->nberrors), &(ls->nbargs));
+		my_count(&(ls->error.errors), &(ls->error.errors));
 	}
-	if (n)
-		my_count(&(ls->nbflags), &(ls->nbargs));
+	n ? my_count(&(ls->error.flags), &(ls->error.args)) : 0;
 }
 
-size_t	my_flags(char *arg, t_ls *ls)
+bool	my_flags(char *arg, t_ls *ls)
 {
-	int	n;
+	bool	n;
 
-	n = 0;
+	n = false;
 	ft_strscmp(arg, "-l", "--listing") ? : my_on(&n , &ls->flags.listing);
 	ft_strscmp(arg, "-R", "--recursive") ? : my_on(&n , &ls->flags.recursive);
 	ft_strscmp(arg, "-r", "--reverse") ? : my_on(&n , &ls->flags.reverse);
@@ -57,7 +56,7 @@ void	my_check_args(int argc, char **argv, t_ls *ls)
 	while (i < argc)
 	{
 		if (!my_flags(argv[i], ls) && my_mode(argv[i]))
-			my_add_files(ls, argv[i]);
+			my_add_files(&(ls->files), argv[i], true);
 		i++;
 	}
 }

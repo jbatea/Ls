@@ -8,6 +8,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <time.h>
+#include <stdbool.h>
 #include "libft.h"
 			/*Defines*/
 
@@ -19,11 +20,11 @@
 
 typedef struct		s_flags
 {
-	int		listing;
-	int		recursive;
-	int		reverse;
-	int		all;
-	int		time;
+	bool		listing;
+	bool		recursive;
+	bool		reverse;
+	bool		all;
+	bool		time;
 
 }			t_flags;
 
@@ -40,30 +41,32 @@ typedef	struct		s_info
 typedef struct		s_files
 {
 	char		*name;
-	struct s_files	*next;
+	t_info		info;
+	bool		arg;	
+	struct s_files	*son;
+	struct s_files	*brother;
 }			t_files;
 
-typedef struct		s_path
+typedef struct		s_error
 {
-	char		*path;
-	t_info		info;	
-	struct s_path	*next;
-}			t_path;
+	int		args;
+	int		flags;
+	int		errors;
+}			t_error;
 
 typedef struct		s_ls
 {
-	int		nbargs;
-	int		nbflags;
-	int		nberrors;
+	t_error		error;
 	t_flags		flags;
 	t_files		*files;
-	t_path		*path;
 }			t_ls;
 
 void	my_check_args(int argc, char **argv, t_ls *ls);
-void	my_save_files(t_ls *ls);
+void	my_add_files(t_files **files, char *name, bool arg);
 char	*my_get_rights(int mode);
-void	my_add_files(t_ls *ls, char *name);
-void	my_print_files(t_ls *ls);
+void	my_save_files(t_ls *ls);
+void	my_print_files(t_ls *ls, t_files *files);
+void	my_sort(t_ls *ls);
+void	my_exit(char *error);
 
 #endif
