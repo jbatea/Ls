@@ -15,7 +15,7 @@ int	main(int argc, char **argv)
 	ls.error.args = argc - 1;
 	my_check_args(argc, argv, &ls);
 	if (argc - 1 == ls.error.flags + ls.error.errors)
-		my_add_files(&(ls.files), ".", false);
-	my_save_files(&ls);
+		my_add_files(&(ls.queue), ".");
+	my_ls(&ls);
 	return (0);
 }

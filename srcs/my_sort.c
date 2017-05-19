@@ -1,34 +1,69 @@
 #include "../includes/ft_ls.h"
 
-bool	my_cmp(t_files **tmp, t_files **swp)
+void	my_split_list(t_files *files, t_files **f1, t_files **f2)
 {
-	char	*str;
+	t_files *tmp;
+	t_files *tmp2;
 
-	str = NULL;
-	if (!*swp || !*tmp || ft_strcmp((*swp)->name, (*tmp)->name) >= 0)
-		return (false);
-	str = (*tmp)->name;
-	(*tmp)->name = (*swp)->name;
-	(*swp)->name = str;
-	return (true);
-}
-
-void	my_sort_ascii(t_ls *ls, t_files *files)
-{
-	t_files	*tmp;
-
-	tmp = NULL;
-	files->brother ? (tmp = files->brother) : (tmp = files->son);
-	if (tmp && my_cmp(&files, &tmp))
-		my_sort_ascii(ls, ls->files);
+	if (!files || !files->next)
+		*f2 = NULL;
 	else
 	{
-		files->brother ? my_sort_ascii(ls, files->brother) : 0;
-		files->son ? my_sort_ascii(ls, files->son) : 0;
+		tmp = files->next;
+		tmp2 = files;
+		while (tmp)
+		{
+			tmp = tmp->next;
+			if (tmp)
+			{
+				tmp = tmp->next;
+				tmp2 = tmp2->next;
+			}
+		}
+		*f2 = tmp2->next;
+		tmp2->next = NULL;
 	}
+	*f1 = files;
 }
 
-void	my_sort(t_ls *ls)
+t_files	*my_merge_list(t_files *f1, t_files *f2)
 {
-	my_sort_ascii(ls, ls->files);
+	t_files	*files;
+
+	files = NULL;
+	if (!f1)
+		return (f2);
+	else if (!f2)
+		return (f1);
+	if (ft_strcasecmp(f1->name, f2->name) <= 0)
+	{
+		files = f1;
+		files->next = my_merge_list(f1->next, f2);
+	}
+	else
+	{
+		files = f2;
+		files->next = my_merge_list(f1, f2->next);
+	}
+	return (files);
+}
+
+void	my_sort_asc(t_files **files)
+{
+	t_files *head;
+	t_files *f1;
+	t_files	*f2;
+
+	head = *files;
+	if (!head || !head->next)
+		return;
+	my_split_list(head, &f1, &f2);
+	my_sort_asc(&f1);
+	my_sort_asc(&f2);
+	*files = my_merge_list(f1, f2);
+}
+
+void	my_sort(t_files **files)
+{
+	my_sort_asc(files);
 }

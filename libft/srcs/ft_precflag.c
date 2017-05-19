@@ -26,8 +26,9 @@ char		*ft_precflag(char *str)
 	j = i + 1;
 	while (str[j] && (str[j] == '+' || ft_isdigit(str[j])))
 		j++;
-	tmp = ft_strndup(str, i);
-	cpy = ft_strdup(str + j);
+	tmp = ft_strndup(str, i + 1);
+	//cpy = ft_strdup(str + j);
+	cpy = ft_strndup(str + i, ft_strlen(str) - j + 1);
 	free(str);
 	str = ft_strjoin_free(tmp, cpy);
 	return (str);

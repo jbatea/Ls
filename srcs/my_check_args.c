@@ -56,7 +56,7 @@ void	my_check_args(int argc, char **argv, t_ls *ls)
 	while (i < argc)
 	{
 		if (!my_flags(argv[i], ls) && my_mode(argv[i]))
-			my_add_files(&(ls->files), argv[i], true);
+			my_add_files(&(ls->queue), argv[i]);
 		i++;
 	}
 }

@@ -42,9 +42,7 @@ typedef struct		s_files
 {
 	char		*name;
 	t_info		info;
-	bool		arg;	
-	struct s_files	*son;
-	struct s_files	*brother;
+	struct s_files	*next;
 }			t_files;
 
 typedef struct		s_error
@@ -59,14 +57,18 @@ typedef struct		s_ls
 	t_error		error;
 	t_flags		flags;
 	t_files		*files;
+	t_files		*queue;
 }			t_ls;
 
-void	my_check_args(int argc, char **argv, t_ls *ls);
-void	my_add_files(t_files **files, char *name, bool arg);
+t_files	*my_add_files(t_files **files, char *name);
+t_files	*my_add_top_files(t_files **files, char *name);
 char	*my_get_rights(int mode);
-void	my_save_files(t_ls *ls);
-void	my_print_files(t_ls *ls, t_files *files);
-void	my_sort(t_ls *ls);
+void	my_check_args(int argc, char **argv, t_ls *ls);
+void	my_reverse_list(t_files **files);
+void	my_del_files(t_files **files);
+void	my_ls(t_ls *ls);
+void	my_print_files(t_ls *ls);
+void	my_sort(t_files **files);
 void	my_exit(char *error);
 
 #endif

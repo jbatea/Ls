@@ -63,7 +63,7 @@ int			*ft_inittab2(void)
 {
 	int		*tab;
 
-	tab = (int *)malloc(sizeof(int) * 2);
+	tab = (int *)malloc(sizeof(int) * 3);
 	if (tab)
 	{
 		tab[0] = 0;

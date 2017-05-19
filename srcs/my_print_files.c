@@ -33,7 +33,7 @@ void	my_apply_flags(t_ls *ls, t_files *files)
 {
 	char *name;
 
-	if (ft_strchr(files->name, '/') && !files->arg)
+	if (ft_strchr(files->name, '/'))
 		name = ft_strrchr(files->name, '/') + 1;
 	else
 		name = files->name;
@@ -41,9 +41,12 @@ void	my_apply_flags(t_ls *ls, t_files *files)
 		ls->flags.listing ? my_listing(files->name, name) : ft_printf("%s\n", name);
 }
 
-void	my_print_files(t_ls *ls, t_files *files)
+void	my_print_files(t_ls *ls)
 {
-	my_apply_flags(ls, files);
-	files->brother ? my_print_files(ls, files->brother) : 0;
-	files->son ? my_print_files(ls, files->son) : 0;
+	if (ls->files)
+	{
+		my_apply_flags(ls, ls->files);
+		my_del_files(&(ls->files));
+		ls->files ? my_print_files(ls) : 0;
+	}
 }

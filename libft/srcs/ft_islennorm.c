@@ -33,7 +33,7 @@ char	*ft_islennorm(char *str)
 	j = i + 1;
 	while (str[j] && (ft_isdigit(str[j])))
 		j++;
-	tmp = ft_strndup(str, i);
+	tmp = ft_strndup(str, i + 1);
 	cpy = ft_strdup(str + j);
 	free(str);
 	str = ft_strjoin_free(tmp, cpy);
