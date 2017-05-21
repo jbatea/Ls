@@ -1,21 +1,17 @@
 #include "../includes/ft_ls.h"
 
-void	my_reverse_list(t_files **files)
+char	*my_files(char *name, char *d_name)
 {
-	t_files *prev;
-	t_files *cur;
-	t_files *next;
+	char	*tmp;
+	char	*files;
 
-	prev = NULL;
-	cur = *files;
-	while (cur)
-	{
-		next = cur->next;
-		cur->next = prev;
-		prev = cur;
-		cur = next;
-	}
-	*files = prev;
+	if (name[ft_strlen(name) - 1] != '/')
+		tmp = ft_strjoin(name, "/");
+	else
+		tmp = ft_strdup(name);
+	files = ft_strjoin(tmp, d_name);
+	ft_strdel(&tmp);
+	return (files);
 }
 
 void	my_del_files(t_files **files)
@@ -28,25 +24,44 @@ void	my_del_files(t_files **files)
 	*files = tmp;
 }
 
-t_files	*my_new_files(char *name)
+void	my_del_list(t_files **files)
+{
+	t_files *tmp;
+	t_files *ptmp;
+
+	tmp = *files;
+	while (tmp)
+	{
+		ptmp = tmp->next;
+		ft_strdel(&tmp->name);
+		ft_memdel((void **)&tmp);
+		tmp = ptmp;
+	}
+}
+
+t_files	*my_new_files(char *name, bool arg)
 {
 	t_files	*new;
+	struct stat sb;
 
 
 	new = (t_files *)malloc(sizeof(t_files));
 	if (!new)
-		my_exit("Malloc Failed");
+		my_exit(NULL, "Malloc Failed");
 	bzero(new, sizeof(t_files));
 	new->name = ft_strdup(name);
+	new->arg = arg;
+	if (!lstat(name, &sb))
+		new->sb = sb;
 	return (new);
 }
 
-t_files	*my_add_files(t_files **files, char *name)
+t_files	*my_add_files(t_files **files, char *name, bool arg)
 {
 	t_files	*new;
 	t_files	*tmp;
 
-	new = my_new_files(name);
+	new = my_new_files(name, arg);
 	if (!*files)
 		*files = new;
 	else
@@ -64,7 +79,7 @@ t_files	*my_add_top_files(t_files **files, char *name)
 	t_files	*new;
 	t_files	*tmp;
 
-	new = my_new_files(name);
+	new = my_new_files(name, NOTARG);
 	if (!*files)
 		*files = new;
 	else

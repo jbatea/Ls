@@ -116,5 +116,6 @@ int				ft_strscmp(char *str, char *cmp1, char *cmp2);
 int				ft_strrchr_cnt(char *s, char c);
 char				*ft_strlower(char *str);
 int				ft_strcasecmp(const char *s1, const char *s2);
+int				ft_strrcmp(const char *s1, const char *s2);
  
 #endif

@@ -40,6 +40,7 @@ SRC =	ft_putchar.c \
 	  ft_strrchr.c \
 	  ft_strchr_cnt.c \
 	  ft_strcmp.c \
+	  ft_strrcmp.c \
 	  ft_strscmp.c \
 	  ft_strncmp.c \
 	  ft_strstr.c \
