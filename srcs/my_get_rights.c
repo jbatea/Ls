@@ -59,8 +59,8 @@ char	*my_get_rights(t_files *files)
 	my_setread(&right, files->sb.st_mode);
 	my_setwrite(&right, files->sb.st_mode);
 	my_setexec(&right, files->sb.st_mode);
-	(listxattr(files->name, NULL, 0) > 0) ? ft_strncpy(right + 10, "@", 1) : 0;
-	(acl_extended_file(files->name)) ? ft_strncpy(right + 10, "+", 1) : 0;
+	(listxattr(files->name, NULL, 0, 0) > 0) ? ft_strncpy(right + 10, "@", 1) : 0;
+	(acl_get_file(files->name, ACL_TYPE_EXTENDED)) ? ft_strncpy(right + 10, "+", 1) : 0;
 	return (right);
 }
 

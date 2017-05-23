@@ -10,20 +10,19 @@
 #include <grp.h>
 #include <time.h>
 #include <stdbool.h>
-#include <acl/libacl.h>
-#include <attr/xattr.h>
+#include <sys/xattr.h>
 #include "libft.h"
 			/*Defines*/
 
 #define BUF_SIZE	512
 
 #define NOTARG		0
-#define ARG		1
+#define ARG			1
 
 #define ERROR		0
 #define DIRECTORY	1
 #define REGULAR		2
-#define LNK		3
+#define LNK			3
 
 			/*Structures*/
 
