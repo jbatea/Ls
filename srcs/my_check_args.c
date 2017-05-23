@@ -1,113 +1,143 @@
 #include "../includes/ft_ls.h"
 
-void	my_on(bool *i, bool *j)
-{
-	*i = true;
-	*j = true;
-}
-
-void	my_off(bool *i, bool *j, bool *k)
-{
-	*i = false;
-	*j = false;
-	*k = false;
-}
-
-void	my_count(int *i, int *j)
-{
-	*i = *i + 1;
-	*j = *j - 1;
-}
-
 size_t	my_mode(char *arg)
 {
 	struct	stat	sb;
 	int		n;
 
 	n = lstat(arg, &sb);
-	if (!n && (S_ISREG(sb.st_mode) || S_ISDIR(sb.st_mode)))
+	if (!n && (S_ISREG(sb.st_mode) || S_ISDIR(sb.st_mode) || S_ISLNK(sb.st_mode)))
 		return (1);
 	return (0);
 }
 
-void	my_error(t_ls *ls, bool n, char *arg)
+bool	my_flagscmp(char *arg, char *s1, char *s2, bool *flags)
 {
-	if (!n && !my_mode(arg))
-	{
-		ft_printf("ls: cannot access '%s': No such file or directory\n", arg);
-		my_count(&(ls->error.errors), &(ls->error.errors));
-	}
-	n ? my_count(&(ls->error.flags), &(ls->error.args)) : 0;
+	if (s1 && s2 && ft_strscmp(arg, s1, s2))
+		return (false);
+	else if (s1 && !s2 && ft_strcmp(arg, s1))
+		return (false);
+	*flags = true;
+	return (true);
 }
 
-void	my_flags_priority(char *arg, t_ls *ls, bool *n)
+bool	my_flags_priority(t_ls *ls, char *arg)
 {
-	if (!ft_strscmp(arg, "-r", "--reverse"))
-	{
-		my_on(n , &ls->flags.reverse);
-		my_off(&ls->flags.time, &ls->flags.file_size, &ls->flags.not_sort);
-	}
+	bool	ret;
+
+	ret = false;
 	if (!ft_strscmp(arg, "-t", "--time"))
 	{
-	 	my_on(n , &ls->flags.time);
-		my_off(&ls->flags.reverse, &ls->flags.file_size, &ls->flags.not_sort);
+		ls->flags.time = true;
+		ls->flags.file_size = false;
+		ls->flags.not_sort = false;
+		ret = true;
 	}
 	if (!ft_strcmp(arg, "-S"))
 	{
-		my_on(n, &ls->flags.file_size);
-		my_off(&ls->flags.reverse, &ls->flags.time, &ls->flags.not_sort);
+		ls->flags.file_size = true;
+		ls->flags.time = false;
+		ls->flags.not_sort = false;
+		ret = true;
 	}
 	if (!ft_strcmp(arg, "-U"))
 	{
-		my_on(n, &ls->flags.not_sort);
-		my_off(&ls->flags.reverse, &ls->flags.time, &ls->flags.file_size);
+		ls->flags.not_sort = true;
+		ls->flags.reverse = false;
+		ls->flags.time = false;
+		ls->flags.file_size = false;
+		ret = true;
 	}
 	if (!ft_strcmp(arg, "-f"))
 	{
-		my_on(n, &ls->flags.not_sort);
+		ls->flags.not_sort = true;
 		ls->flags.all = true;
 		ls->flags.listing = false;
-		my_off(&ls->flags.reverse, &ls->flags.time, &ls->flags.file_size);
+		ls->flags.reverse = false;
+		ls->flags.time = false;
+		ls->flags.file_size = false;
+		ret = true;
 	}
-
+	return (ret);
 }
 
-bool	my_flags(char *arg, t_ls *ls)
+bool	my_flags(t_ls *ls, char *arg)
 {
-	bool	n;
+	bool	ret;
 
-	n = false;
-	my_flags_priority(arg, ls, &n);
-	ft_strscmp(arg, "-l", "--listing") ? : my_on(&n , &ls->flags.listing);
-	ft_strscmp(arg, "-R", "--recursive") ? : my_on(&n , &ls->flags.recursive);
-	ft_strscmp(arg, "-a", "--all") ? : my_on(&n , &ls->flags.all);
-	ft_strscmp(arg, "-A", "--almost-all") ? : my_on(&n , &ls->flags.almost_all);
-	ft_strscmp(arg, "-G", "--no-group") ? : my_on(&n , &ls->flags.no_group);
-	ft_strscmp(arg, "-B", "--ignore-backups") ? : my_on(&n , &ls->flags.ignore_backups);
-	ft_strcmp(arg, "--help") ? : my_on(&n , &ls->flags.help);
-	ft_strscmp(arg, "-s", "--size") ? : my_on(&n , &ls->flags.size);
-	ft_strscmp(arg, "-Q", "--quote-name") ? : my_on(&n , &ls->flags.quote);
-	ft_strscmp(arg, "-p", "--indicator-style") ? : my_on(&n , &ls->flags.indicator_style);
-	ft_strscmp(arg, "-d", "--directory") ? : my_on(&n , &ls->flags.directory);
+	ret = 0;
+	my_flags_priority(ls, arg) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-r", "--reverse", &ls->flags.reverse) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-l", "--listing", &ls->flags.listing) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-R", "--recursive", &ls->flags.recursive) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-a", "--all", &ls->flags.all) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-A", "--almost-all", &ls->flags.almost_all) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-G", "--no-group", &ls->flags.no_group) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-B", "--ignore-backups", &ls->flags.ignore_backups) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-s", "--size", &ls->flags.size) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-Q", "--quote-name", &ls->flags.quote) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-p", "--indicator-style", &ls->flags.indicator_style) ? (ret = 1) : 0;
+	my_flagscmp(arg, "-d", "--directory", &ls->flags.directory) ? (ret = 1) : 0;
+	my_flagscmp(arg, "--help", NULL, &ls->flags.help) ? (ret = 1) : 0;
 	if (!ft_strcmp(arg, "-o"))
 	{
-		ls->flags.listing = 1;
-		my_on(&n, &ls->flags.no_group);
+		ls->flags.listing = true;
+		ls->flags.no_group = true;
+		ret = 1;
 	}
-	my_error(ls, n, arg);
-	return (n);
+	return (ret);
+}
+
+bool	my_split_arg(t_ls *ls, char *arg)
+{
+	int	i;
+	char	*tmp;
+	bool	ret;
+
+	i = 1;
+	while (arg[i])
+	{
+		tmp = ft_strnjoin("-", arg + i, 1);
+		ret = (my_flags(ls, tmp)) ? true : false;
+		ft_strdel(&tmp);
+		if (ret == false)
+		{
+			ls->error.invalid = arg[i];
+			return (ret);
+		}
+		i++;
+	}
+	return (ret);
+}
+
+void	my_print_errors(t_ls *ls, char c, char *arg)
+{
+	ls->error.errors = ls->error.errors + 1;
+	if (c == '-')
+	{
+		ft_printf("ft_ls: invalid option -- '%c'\nTry './ft_ls --help' for more information.\n", ls->error.invalid);
+		my_exit(ls, NULL);
+	}
+	else
+		ft_printf("ft_ls: cannot access '%s': No such file or directory\n", arg);
 }
 
 void	my_check_args(int argc, char **argv, t_ls *ls)
 {
-	int		i;
+	int	i;
 
-	i = 1;;
-
+	i = 1;
 	while (i < argc)
 	{
-		if (!my_flags(argv[i], ls) && my_mode(argv[i]))
+		if ((my_mode(argv[i])))
 			my_add_files(&(ls->queue), argv[i], ARG);
+		else if (argv[i][0] == '-' && (my_flags(ls, argv[i]) || my_split_arg(ls, argv[i])))
+		{
+			ls->error.flags = ls->error.flags + 1;
+			ls->error.args = ls->error.args - 1;
+		}
+		else
+			my_print_errors(ls, argv[i][0], argv[i]);
 		i++;
 	}
 }

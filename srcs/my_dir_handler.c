@@ -9,24 +9,26 @@ int	my_filetype(DIR **dir, char *name)
 	{
 		if (S_ISDIR(sb.st_mode) && (*dir = opendir(name)))
 			return (DIRECTORY);
+		if (S_ISDIR(sb.st_mode) && !(*dir))
+			return (ERROR);
 		if (S_ISLNK(sb.st_mode))
 			return (LNK);
 	}
 	return (REGULAR);
 }
 
-bool	my_dir(char *name)
+int	my_dir(char *name)
 {
 	int	i;
 	DIR	*dir;
-	bool	ret;
+	int	ret;
 
 	dir = NULL;
-	ret = false;
-	if (my_filetype(&dir, name) == DIRECTORY)
+	ret = my_filetype(&dir, name);
+	if (ret == DIRECTORY)
 	{
 		i = ft_strrchr_cnt(name, '/') + 1;
-		ret = (ft_strscmp(name + i, ".", "..") ? true : false);
+		ret = (ft_strscmp(name + i, ".", "..") ? DIRECTORY : -1);
 		closedir(dir);
 	}
 	return (ret);
@@ -35,13 +37,15 @@ bool	my_dir(char *name)
 void	my_check_dir(t_ls *ls)
 {
 	t_files *files;
+	int	ret;
 
 
 	my_reverse_list(&(ls->files));
 	files = ls->files;
 	while (files)
 	{
-		if (my_dir(files->name))
+		ret = my_dir(files->name);
+		if (ret == DIRECTORY || ret == ERROR)
 			my_add_top_files(&(ls->queue), files->name);
 		files = files->next;
 	}
@@ -56,7 +60,8 @@ void	my_print_dir(t_ls *ls, t_files *files)
 		ft_printf("\"%s\":\n", files->name);
 	else
 		ft_printf("%s:\n", files->name);
-	ls->display++;	
+	ls->display++;
+	ls->total = true;	
 }
 
 bool	my_hidden_file(t_ls *ls, char *name)
@@ -101,7 +106,7 @@ void	my_opendir(t_ls *ls, t_files *files)
 	dir = NULL;
 	ret = my_filetype(&dir, files->name);
 	(ret == DIRECTORY) ? my_readdir(ls, files, dir) : 0;
-	if (files->arg && ret == REGULAR)
+	if (files->arg && ret != DIRECTORY)
 	{
 		my_apply_flags(ls, files);
 		ls->display++;

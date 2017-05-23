@@ -20,12 +20,21 @@ void	my_help(t_ls *ls)
 	ft_printf("-t, --time\nsort by modification time, newest first\n\n");
 	ft_printf("-U\ndo not sort; list entries in directory order\n\n");
 	ft_printf("--help\ndisplay this help and exit\n\n");
-	my_exit(ls, NULL);
-	
+	my_exit(ls, NULL);	
+}
+
+void	my_print_error(t_ls *ls)
+{
+	while (ls->queue && ls->queue->error)
+	{
+		ft_printf("ft_ls: cannot open directory '%s': Permission denied\n", ls->queue->name);
+		my_del_files(&(ls->queue));
+	}
 }
 
 void	my_ls(t_ls *ls)
 {
+	my_print_error(ls);
 	if (ls->queue && ls->queue->name)
 	{
 		my_add_files(&(ls->files), ls->queue->name, ls->queue->arg);
@@ -33,7 +42,7 @@ void	my_ls(t_ls *ls)
 		my_del_files(&(ls->queue));
 		my_opendir(ls, ls->files);
 		my_del_files(&(ls->files));
-		ls->flags.not_sort ? 0 : my_sort(ls, &(ls->files));
+		(ls->flags.not_sort) ? 0 : my_cmp(ls, &(ls->files), NOTARG);
 		(ls->flags.recursive && !ls->flags.directory) ? my_check_dir(ls) : 0;
 		((ls->flags.listing || ls->flags.size) && !ls->flags.directory) ? my_print_total(ls) : 0;
 		(ls->flags.directory) ? 0 : my_print_files(ls);
@@ -49,9 +58,10 @@ int	main(int argc, char **argv)
 	ls.error.args = argc - 1;
 	my_check_args(argc, argv, &ls);
 	ls.flags.help ? my_help(&ls) : 0;
-	if (argc - 1 == ls.error.flags + ls.error.errors)
+	(argc - 1) ? 0 : my_add_files(&(ls.queue), ".", NOTARG);
+	if (argc - 1 == ls.error.flags + ls.error.errors && (ls.error.errors != argc - 1))
 		(ls.flags.help) ? 0 : my_add_files(&(ls.queue), ".", NOTARG);
-	ls.flags.not_sort ? 0 : my_sort(&ls, &(ls.queue));
+	(ls.flags.not_sort) ? 0 : my_cmp(&ls, &(ls.queue), ARG);
 	my_ls(&ls);
 	return (0);
 }

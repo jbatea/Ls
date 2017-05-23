@@ -44,7 +44,6 @@ t_files	*my_new_files(char *name, bool arg)
 	t_files	*new;
 	struct stat sb;
 
-
 	new = (t_files *)malloc(sizeof(t_files));
 	if (!new)
 		my_exit(NULL, "Malloc Failed");
@@ -53,6 +52,8 @@ t_files	*my_new_files(char *name, bool arg)
 	new->arg = arg;
 	if (!lstat(name, &sb))
 		new->sb = sb;
+	if (S_ISDIR(sb.st_mode) && ((S_IRGRP & sb.st_mode) != S_IRGRP))
+		new->error = true;
 	return (new);
 }
 

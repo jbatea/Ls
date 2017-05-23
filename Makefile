@@ -8,6 +8,7 @@ SRC_NAME	=	main.c			\
 			my_print_files.c	\
 			my_sort.c \
 			my_utils.c	\
+			my_cmp.c	\
 
 SRC		=	$(addprefix srcs/, $(SRC_NAME))
 
@@ -17,7 +18,7 @@ CC		=	gcc
 
 FLAGS		= 	-Wall -Werror -Wextra
 
-LIB		= 	-L libft -lft
+LIB		= 	-L libft -lft -lacl
 
 INCLUDE		= 	-I includes
 

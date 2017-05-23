@@ -3,12 +3,15 @@
 			/*Includes*/
 
 #include <sys/types.h>
+#include <sys/acl.h>
 #include <sys/stat.h>
 #include <dirent.h>
 #include <pwd.h>
 #include <grp.h>
 #include <time.h>
 #include <stdbool.h>
+#include <acl/libacl.h>
+#include <attr/xattr.h>
 #include "libft.h"
 			/*Defines*/
 
@@ -48,6 +51,7 @@ typedef struct		s_files
 	char		*name;
 	struct stat	sb;
 	bool		arg;
+	bool		error;
 	struct s_files	*next;
 }			t_files;
 
@@ -56,6 +60,7 @@ typedef struct		s_error
 	int		args;
 	int		flags;
 	int		errors;
+	char		invalid;
 }			t_error;
 
 typedef struct		s_ls
@@ -65,18 +70,19 @@ typedef struct		s_ls
 	t_files		*files;
 	t_files		*queue;
 	int		display;
+	bool		total;
 }			t_ls;
 
 t_files	*my_add_files(t_files **files, char *name, bool arg);
 t_files	*my_add_top_files(t_files **files, char *name);
-char	*my_get_rights(int mode);
+char	*my_get_rights(t_files *files);
 void	my_check_args(int argc, char **argv, t_ls *ls);
 void	my_reverse_list(t_files **files);
 void	my_del_files(t_files **files);
 void	my_del_list(t_files **files);
 void	my_print_files(t_ls *ls);
 char	*my_files(char *name, char *d_name);
-void	my_sort(t_ls *ls, t_files **files);
+void	my_sort(t_ls *ls, t_files **files, int (*cmp)(void *, void *));
 void	my_exit(t_ls *ls, char *error);
 void	my_opendir(t_ls *ls, t_files *files);
 void	my_check_dir(t_ls *ls);
@@ -84,5 +90,6 @@ void	my_apply_flags(t_ls *ls, t_files *files);
 char	*my_get_time(char *ctime);
 bool	my_hidden_file(t_ls *ls, char *name);
 void	my_print_total(t_ls *ls);
+void	my_cmp(t_ls *ls, t_files **files, bool arg);
 
 #endif

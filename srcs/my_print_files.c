@@ -9,7 +9,7 @@ char	*my_get_time(char *ctime)
 	return (time);
 }
 
-char	*my_check_link(t_ls *ls, t_files *files, char *name)
+char	*my_check_link(t_ls *ls, t_files *files)
 {
 	char *buf;
 
@@ -18,7 +18,7 @@ char	*my_check_link(t_ls *ls, t_files *files, char *name)
 		buf = ft_strnew(BUF_SIZE);
 		ft_strcpy(buf, "-> ");
 		(!buf) ? (my_exit(ls, "Malloc Failed")) : 0;
-		readlink(name, buf + 3, BUF_SIZE - 4);
+		readlink(files->name, buf + 3, BUF_SIZE - 4);
 		return (buf);
 	}
 	return (ft_strdup(""));
@@ -32,27 +32,27 @@ void	my_listing(t_ls *ls, t_files *files, char *d_name)
 	char		*gid;
 	char		*link;
 
-	right = my_get_rights(files->sb.st_mode);
+	right = my_get_rights(files);
 	time = my_get_time(ctime(&(files->sb.st_mtime)));
 	uid = getpwuid(files->sb.st_uid)->pw_name;
 	gid = getgrgid(files->sb.st_gid)->gr_name;
-	link = my_check_link(ls, files, d_name);
+	link = my_check_link(ls, files);
 	if (ls->flags.no_group && !ls->flags.size && !ls->flags.quote)
-		ft_printf("%s% 3d %-6s % 6d %s %s%s\n", right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
+		ft_printf("%s% 3d %-6s % 6d %s %s%-6s\n", right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
 	else if (ls->flags.no_group && !ls->flags.size && ls->flags.quote)
-		ft_printf("%s% 3d %-6s % 6d %s \"%s\"%s\n", right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
+		ft_printf("%s% 3d %-6s % 6d %s \"%s\"%-6s\n", right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
 	else if (ls->flags.no_group && ls->flags.size && ls->flags.quote)
-		ft_printf("%-5d%s% 3d %-6s % 6d %s \"%s\"%s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
+		ft_printf("%-5d%s% 3d %-6s % 6d %s \"%s\"%-6s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
 	else if (ls->flags.no_group && ls->flags.size)
-		ft_printf("%-5d%s% 3d %-6s % 6d %s %s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
+		ft_printf("%-5d%s% 3d %-6s % 6d %s %s%-6s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
 	else if (ls->flags.size && ls->flags.quote)
-		ft_printf("%-5d%s% 3d %-6s %-7s % 6d %s \"%s\"\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);
+		ft_printf("%-5d%s% 3d %-6s %-7s % 6d %s \"%s\"%-6s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);
 	else if (ls->flags.size)
-		ft_printf("%-5d%s% 3d %-6s %-7s % 6d %s %s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);
+		ft_printf("%-5d%s% 3d %-6s %-7s % 6d %s %s%-6s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);
 	else if (ls->flags.quote)
-		ft_printf("%s% 3d %-6s %-7s % 6d %s \"%s\"\n", right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);
+		ft_printf("%s% 3d %-6s %-7s % 6d %s \"%s\"%-6s\n", right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);
 	else
-		ft_printf("%s% 3d %-6s %-7s % 6d %s %s %s\n", right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);	
+		ft_printf("%s% 3d %-6s %-7s % 6d %s %s %-6s\n", right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);	
 	ft_strdel(&time);
 	ft_strdel(&right);
 	ft_strdel(&link);

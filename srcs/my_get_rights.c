@@ -6,13 +6,14 @@ char	*my_initright()
 	int	i;
 
 	i = 0;
-	right = (char *)malloc(sizeof(char) * (11));
+	right = (char *)malloc(sizeof(char) * (12));
 	while (i < 10)
 	{
 		right[i] = '-';
 		i++;
 	}
-	right[i] = '\0';
+	right[i] = ' ';
+	right[i + 1] = '\0';
 	return (right);
 }
 
@@ -46,18 +47,20 @@ void	my_setexec(char **right, int mode)
 		ft_strncpy(*right + 9, "x", 1);
 }
 
-char	*my_get_rights(int mode)
+char	*my_get_rights(t_files *files)
 { 
 	char	*right;
 
 	right = my_initright();
-	if (S_ISDIR(mode))
+	if (S_ISDIR(files->sb.st_mode))
 		right[0] = 'd';
-	if (S_ISLNK(mode))
+	if (S_ISLNK(files->sb.st_mode))
 		right[0] = 'l';
-	my_setread(&right, mode);
-	my_setwrite(&right, mode);
-	my_setexec(&right, mode);
+	my_setread(&right, files->sb.st_mode);
+	my_setwrite(&right, files->sb.st_mode);
+	my_setexec(&right, files->sb.st_mode);
+	(listxattr(files->name, NULL, 0) > 0) ? ft_strncpy(right + 10, "@", 1) : 0;
+	(acl_extended_file(files->name)) ? ft_strncpy(right + 10, "+", 1) : 0;
 	return (right);
 }
 
