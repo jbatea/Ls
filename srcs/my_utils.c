@@ -12,8 +12,7 @@ void	my_print_total(t_ls *ls)
 		total = total + tmp->sb.st_blocks;
 		tmp = tmp->next;
 	}
-	(ls->total) ? ft_printf("total %d\n", total / 2) : 0;
-	ls->total = false;
+	ft_printf("total %d\n", total / 2);
 }
 
 void	my_exit(t_ls *ls, char *error)

@@ -27,7 +27,9 @@ void	my_print_error(t_ls *ls)
 {
 	while (ls->queue && ls->queue->error)
 	{
-		ft_printf("ft_ls: cannot open directory '%s': Permission denied\n", ls->queue->name);
+		write(2, "ft_ls: cannot open directory '", 30);
+		write(2, ls->queue->name, ft_strlen(ls->queue->name));
+		write(2, "': Permission denied\n", 21);
 		my_del_files(&(ls->queue));
 	}
 }
@@ -37,7 +39,7 @@ void	my_ls(t_ls *ls)
 	my_print_error(ls);
 	if (ls->queue && ls->queue->name)
 	{
-		my_add_files(&(ls->files), ls->queue->name, ls->queue->arg);
+		my_add_files(ls, &(ls->files), ls->queue->name, ls->queue->arg);
 		(ls->flags.directory) ? my_apply_flags(ls, ls->queue) : 0;
 		my_del_files(&(ls->queue));
 		my_opendir(ls, ls->files);
@@ -54,14 +56,15 @@ int	main(int argc, char **argv)
 {
 	t_ls	ls;
 
-	bzero(&ls, sizeof(ls));
+	ft_bzero(&ls, sizeof(ls));
 	ls.error.args = argc - 1;
 	my_check_args(argc, argv, &ls);
 	ls.flags.help ? my_help(&ls) : 0;
-	(argc - 1) ? 0 : my_add_files(&(ls.queue), ".", NOTARG);
+	(argc - 1) ? 0 : my_add_files(&ls, &(ls.queue), ".", NOTARG);
 	if (argc - 1 == ls.error.flags + ls.error.errors && (ls.error.errors != argc - 1))
-		(ls.flags.help) ? 0 : my_add_files(&(ls.queue), ".", NOTARG);
+		(ls.flags.help) ? 0 : my_add_files(&ls, &(ls.queue), ".", NOTARG);
 	(ls.flags.not_sort) ? 0 : my_cmp(&ls, &(ls.queue), ARG);
 	my_ls(&ls);
+	my_exit(&ls, NULL);
 	return (0);
 }

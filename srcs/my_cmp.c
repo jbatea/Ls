@@ -20,7 +20,7 @@ int	my_timecmp(t_files *file1, t_files *file2)
 		return (i);
 	if ((i = file2->sb.st_mtime - file1->sb.st_mtime))
 		return (i);
-	if ((i = file2->sb.st_mtimespec.tv_nsec - file1->sb.st_mtimespec.tv_nsec))
+	if ((i = file2->sb.st_mtim.tv_nsec - file1->sb.st_mtim.tv_nsec))
 		return (i);
 	return (ft_strcmp(file1->name, file2->name));
 }
@@ -33,7 +33,7 @@ int	my_timercmp(t_files *file1, t_files *file2)
 		return (i);
 	if ((i = file1->sb.st_mtime - file2->sb.st_mtime))
 		return (i);
-	if ((i = file1->sb.st_mtimespec.tv_nsec - file2->sb.st_mtimespec.tv_nsec))
+	if ((i = file1->sb.st_mtim.tv_nsec - file2->sb.st_mtim.tv_nsec))
 		return (i);
 	return (ft_strcmp(file2->name, file1->name));
 }

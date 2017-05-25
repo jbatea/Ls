@@ -1,69 +1,64 @@
 #include "../includes/ft_ls.h"
 
-char	*my_get_time(char *ctime)
+void	my_get_time(t_files *files)
 {
-	char	*time;
+	char	*tmp_time;
+	time_t	dif;
 
-	time = ft_strndup(ctime + 4, ft_strlen(ctime) - 13);
-	time[0] = ft_tolower(time[0]);
-	return (time);
+	dif = time(NULL) - files->sb.st_mtime;
+	tmp_time = ctime(&(files->sb.st_mtime));
+	if (dif >= 0 && dif < SIX_MONTH)
+		ft_strncpy(files->time, tmp_time + 4, 12);
+	else
+	{
+		ft_strncpy(files->time + 7, tmp_time + 20, 4);
+		ft_strncpy(files->time, tmp_time + 4, 7);
+	}
 }
 
-char	*my_check_link(t_ls *ls, t_files *files)
+void	my_check_link(t_files *files)
 {
-	char *buf;
-
 	if (S_ISLNK(files->sb.st_mode))
 	{
-		buf = ft_strnew(BUF_SIZE);
-		ft_strcpy(buf, "-> ");
-		(!buf) ? (my_exit(ls, "Malloc Failed")) : 0;
-		readlink(files->name, buf + 3, BUF_SIZE - 4);
-		return (buf);
+		ft_strcpy(files->link, "-> ");
+		readlink(files->name, files->link + 3, BUF_SIZE - 4);
 	}
-	return (ft_strdup(""));
 }
 
-void	my_listing(t_ls *ls, t_files *files, char *d_name)
+void	my_listing(t_ls *ls, t_files *f, char *name)
 {
-	char		*right;
-	char		*time;
 	char		*uid;
 	char		*gid;
-	char		*link;
 
-	right = my_get_rights(files);
-	time = my_get_time(ctime(&(files->sb.st_mtime)));
-	uid = getpwuid(files->sb.st_uid)->pw_name;
-	gid = getgrgid(files->sb.st_gid)->gr_name;
-	link = my_check_link(ls, files);
-	if (ls->flags.no_group && !ls->flags.size && !ls->flags.quote)
-		ft_printf("%s% 3d %-6s % 6d %s %s%-6s\n", right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
+	my_get_rights(f);
+	my_get_time(f);
+	my_check_link(f);
+	uid = getpwuid(f->sb.st_uid)->pw_name;
+	gid = getgrgid(f->sb.st_gid)->gr_name;
+	if (!ls->flags.no_group && !ls->flags.size && !ls->flags.quote)
+		ft_printf("%s %*d %s %*s %**s %s %s %s\n", f->right, ls->lnk - f->lnk, f->sb.st_nlink, uid, ls->uid - f->uid, gid, ls->gid - f->gid, ls->size - f->size, f->dev, f->time, name, f->link);	
+	else if (ls->flags.no_group && !ls->flags.size && !ls->flags.quote)
+		ft_printf("%s %*d %s %**s %s %s %s\n", f->right, ls->lnk - f->lnk, f->sb.st_nlink, uid, ls->uid - f->uid, ls->size - f->size, f->dev, f->time, name, f->link);
 	else if (ls->flags.no_group && !ls->flags.size && ls->flags.quote)
-		ft_printf("%s% 3d %-6s % 6d %s \"%s\"%-6s\n", right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
+		ft_printf("%s %*d %s %**s %s \"%s\"%s\n", f->right, ls->lnk - f->lnk, f->sb.st_nlink, uid, ls->uid - f->uid, ls->size - f->size, f->dev, f->time, name, f->link);
 	else if (ls->flags.no_group && ls->flags.size && ls->flags.quote)
-		ft_printf("%-5d%s% 3d %-6s % 6d %s \"%s\"%-6s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
+		ft_printf("%*d %s %*d %s %**s %s \"%s\"%s\n", ls->blk - f->blk, f->sb.st_blocks / 2, f->right, ls->lnk - f->lnk, f->sb.st_nlink, uid, ls->uid - f->uid, ls->size - f->size, f->dev, f->time, name, f->link);
 	else if (ls->flags.no_group && ls->flags.size)
-		ft_printf("%-5d%s% 3d %-6s % 6d %s %s%-6s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, files->sb.st_size, time, d_name, link);
+		ft_printf("%*d %s %*d %s %**s %s %s %s\n", ls->blk - f->blk, f->sb.st_blocks / 2, f->right, ls->lnk - f->lnk, f->sb.st_nlink, uid, ls->uid - f->uid, ls->size - f->size, f->dev, f->time, name, f->link);
 	else if (ls->flags.size && ls->flags.quote)
-		ft_printf("%-5d%s% 3d %-6s %-7s % 6d %s \"%s\"%-6s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);
+		ft_printf("%*d %s %*d %s %*s %**s %s \"%s\"%s\n", ls->blk - f->blk, f->sb.st_blocks / 2, f->right, ls->lnk - f->lnk, f->sb.st_nlink, uid, ls->uid - f->uid, gid, ls->gid - f->gid, ls->size - f->size, f->dev, f->time, name, f->link);
 	else if (ls->flags.size)
-		ft_printf("%-5d%s% 3d %-6s %-7s % 6d %s %s%-6s\n", files->sb.st_blocks / 2, right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);
+		ft_printf("%*d %s %*d %s %*s %**s %s %s %s\n", ls->blk - f->blk, f->sb.st_blocks / 2, f->right, ls->lnk - f->lnk, f->sb.st_nlink, uid, ls->uid - f->uid, gid, ls->gid- f->gid, ls->size - f->size, f->dev, f->time, name, f->link);
 	else if (ls->flags.quote)
-		ft_printf("%s% 3d %-6s %-7s % 6d %s \"%s\"%-6s\n", right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);
-	else
-		ft_printf("%s% 3d %-6s %-7s % 6d %s %s %-6s\n", right, files->sb.st_nlink, uid, gid, files->sb.st_size, time, d_name, link);	
-	ft_strdel(&time);
-	ft_strdel(&right);
-	ft_strdel(&link);
+		ft_printf("%s %*d %s %*s %**s %s \"%s\"%s\n", f->right, ls->lnk - f->lnk, f->sb.st_nlink, uid, ls->uid - f->uid, gid, ls->gid - f->gid, ls->size - f->size, f->dev, f->time, name, f->link);
 }
 
 void	my_opt_flags(t_ls *ls, t_files *files, char *name)
 {
 	if (ls->flags.size && !ls->flags.listing && !ls->flags.quote)
-		ft_printf("%-4d %s\n", files->sb.st_blocks / 2, name);
+		ft_printf("%*d   %s\n", ls->blk - files->blk, files->sb.st_blocks / 2, name);
 	else if (ls->flags.size && ls->flags.quote && !ls->flags.listing)
-		ft_printf("%-4d \"%s\"\n", files->sb.st_blocks / 2, name);
+		ft_printf("%*d  \"%s\"\n", ls->blk - files->blk, files->sb.st_blocks / 2, name);
 	else if (ls->flags.listing)
 		my_listing(ls, files, name);
 	else if (ls->flags.quote)

@@ -61,7 +61,6 @@ void	my_print_dir(t_ls *ls, t_files *files)
 	else
 		ft_printf("%s:\n", files->name);
 	ls->display++;
-	ls->total = true;	
 }
 
 bool	my_hidden_file(t_ls *ls, char *name)
@@ -84,12 +83,17 @@ void	my_readdir(t_ls *ls, t_files *files, DIR *dir)
 
 	path = NULL;
 	((ls->flags.recursive || ls->error.args) && !ls->flags.directory) ? my_print_dir(ls, files) : 0;
+	ls->size = 0;
+	ls->gid = 0;
+	ls->uid = 0;
+	ls->lnk = 0;
+	ls->blk = 0;
 	while ((dirent = readdir(dir)))
 	{
 		if (my_hidden_file(ls, dirent->d_name))
 		{
 			path = my_files(files->name, dirent->d_name);
-			my_add_files(&files, path, NOTARG);
+			my_add_files(ls, &files, path, NOTARG);
 			ft_strdel(&path);
 		}
 		dirent = NULL;

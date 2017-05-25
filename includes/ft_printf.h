@@ -99,5 +99,6 @@ char				*ft_applysharp(char s, char *tmp, char f);
 char				*ft_pacnull(char *str, int len);
 void				ft_freeall(int *tab, int *tab1, char *tmp);
 char				*ft_iscnull(char *s, t_lst *lst, int *tab);
+int				ft_fprintf(int fd, const char *format, ...);
 
 #endif

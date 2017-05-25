@@ -24,8 +24,13 @@ void			ft_newelem(t_lst *lst, char *str)
 		new->cpy = str;
 		new->len = 0;
 		new->next = NULL;
-		while (cur->next)
-			cur = cur->next;
-		cur->next = new;
+		if (!cur)
+			lst = new;
+		else
+		{
+			while (cur->next)
+				cur = cur->next;
+			cur->next = new;
+		}
 	}
 }

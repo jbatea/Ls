@@ -18,7 +18,7 @@ CC		=	gcc
 
 FLAGS		= 	-Wall -Werror -Wextra
 
-LIB		= 	-L libft -lft
+LIB		= 	-L libft -lft -lacl
 
 INCLUDE		= 	-I includes
 

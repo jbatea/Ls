@@ -15,25 +15,11 @@
 char		*ft_strnjoin(const char *s1, const char *s2, int n)
 {
 	char	*tmp;
-	int		i;
-	int		j;
 
-	i = 0;
-	j = 0;
-	tmp = (char *)malloc(sizeof(char) * (n + 1));
+	tmp = ft_strnew(n);
 	if (!tmp)
 		return (NULL);
-	while (s1[i] && i < n)
-	{
-		tmp[i] = s1[i];
-		i++;
-	}
-	while (s2[j] && j < n)
-	{
-		tmp[i] = s2[j];
-		i++;
-		j++;
-	}
-	tmp[i] = '\0';
+	ft_strcpy(tmp, s1);
+	ft_strncpy(tmp + ft_strlen(s1), s2, n);
 	return (tmp);
 }

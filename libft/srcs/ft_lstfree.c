@@ -20,7 +20,7 @@ void		ft_lstfree(t_lst **lst)
 	tmp = *lst;
 	while (tmp)
 	{
-		free(tmp->cpy);
+		ft_strdel(&tmp->cpy);
 		ptmp = tmp->next;
 		free(tmp);
 		tmp = ptmp;
