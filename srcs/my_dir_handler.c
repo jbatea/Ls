@@ -1,22 +1,6 @@
 #include "../includes/ft_ls.h"
 #include <stdio.h>
 
-int	my_filetype(DIR **dir, char *name)
-{
-	struct stat 	sb;
-
-	if (!lstat(name, &sb))
-	{
-		if (S_ISDIR(sb.st_mode) && (*dir = opendir(name)))
-			return (DIRECTORY);
-		if (S_ISDIR(sb.st_mode) && !(*dir))
-			return (ERROR);
-		if (S_ISLNK(sb.st_mode))
-			return (LNK);
-	}
-	return (REGULAR);
-}
-
 int	my_dir(char *name)
 {
 	int	i;
@@ -52,22 +36,12 @@ void	my_check_dir(t_ls *ls)
 	my_reverse_list(&(ls->files));
 }
 
-void	my_print_dir(t_ls *ls, t_files *files)
-{
-	if (ls->display)
-		ft_printf("\n");
-	if (ls->flags.quote)
-		ft_printf("\"%s\":\n", files->name);
-	else
-		ft_printf("%s:\n", files->name);
-	ls->display++;
-}
-
 bool	my_hidden_file(t_ls *ls, char *name)
 {
 	if (name[0] == '.' && (ls->flags.all || ls->flags.directory))
 		return (true);
-	if (ft_strscmp(name, ".", "..") && name[0] == '.' && ls->flags.almost_all)
+	if (ft_strscmp(name, ".", "..") && name[0] == '.' &&\
+		ls->flags.almost_all)
 		return (true);
 	if (name[ft_strlen(name) - 1] == '~' && ls->flags.ignore_backups)
 		return (false);
@@ -82,7 +56,8 @@ void	my_readdir(t_ls *ls, t_files *files, DIR *dir)
 	struct dirent	*dirent;
 
 	path = NULL;
-	((ls->flags.recursive || ls->error.args) && !ls->flags.directory) ? my_print_dir(ls, files) : 0;
+	if ((ls->flags.recursive || ls->error.args) && !ls->flags.directory)
+		my_print_dir(ls, files);
 	ls->size = 0;
 	ls->gid = 0;
 	ls->uid = 0;

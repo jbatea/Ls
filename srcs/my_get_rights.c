@@ -1,18 +1,5 @@
 #include "../includes/ft_ls.h"
 
-void	my_initright(t_files *files)
-{
-	int	i;
-
-	i = 0;
-	while (i < 10)
-	{
-		files->right[i] = '-';
-		i++;
-	}
-	files->right[i] = ' ';
-}
-
 void	my_setread(t_files *files)
 {
 	if ((S_IRUSR & files->sb.st_mode) == S_IRUSR)
@@ -47,11 +34,17 @@ void	my_setstickybit(t_files *files)
 {
 	if ((S_ISVTX & files->sb.st_mode) != S_ISVTX)
 		return;
-	((S_IXOTH & files->sb.st_mode) == S_IXOTH) ? ft_strncpy(files->right + 9, "t", 1) : ft_strncpy(files->right + 9, "T", 1);
+	((S_IXOTH & files->sb.st_mode) == S_IXOTH) ?\
+		ft_strncpy(files->right + 9, "t", 1)\
+			: ft_strncpy(files->right + 9, "T", 1);
 	if (S_ISDIR(files->sb.st_mode))
 		return;
-	((S_IXUSR & files->sb.st_mode) == S_IXUSR) ? ft_strncpy(files->right + 3, "s", 1) : ft_strncpy(files->right + 3, "S", 1);
-	((S_IXGRP & files->sb.st_mode) == S_IXGRP) ? ft_strncpy(files->right + 6, "s", 1) : ft_strncpy(files->right + 6, "S", 1);
+	((S_IXUSR & files->sb.st_mode) == S_IXUSR) ?\
+		ft_strncpy(files->right + 3, "s", 1) :\
+			ft_strncpy(files->right + 3, "S", 1);
+	((S_IXGRP & files->sb.st_mode) == S_IXGRP) ?\
+		ft_strncpy(files->right + 6, "s", 1) :\
+			ft_strncpy(files->right + 6, "S", 1);
 }
 
 void	my_get_rights(t_files *files)
@@ -73,7 +66,8 @@ void	my_get_rights(t_files *files)
 	my_setwrite(files);
 	my_setexec(files);
 	my_setstickybit(files);
-	(listxattr(files->name, NULL, 0) > 0) ? ft_strncpy(files->right + 10, "@", 1) : 0;
-	(acl_get_file(files->name, 0x00000100)) ? ft_strncpy(files->right + 10, "+", 1) : 0;
+	if (listxattr(files->name, NULL, 0) > 0)
+		ft_strncpy(files->right + 10, "@", 1);
+	if (acl_get_file(files->name, 0x00000100))
+		ft_strncpy(files->right + 10, "+", 1);
 }
-

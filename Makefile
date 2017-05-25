@@ -8,7 +8,11 @@ SRC_NAME	=	main.c			\
 			my_print_files.c	\
 			my_sort.c \
 			my_utils.c	\
+			my_flags.c	\
 			my_cmp.c	\
+			my_reverse_cmp.c	\
+			my_handle_lst.c	\
+			my_listing.c	\
 
 SRC		=	$(addprefix srcs/, $(SRC_NAME))
 

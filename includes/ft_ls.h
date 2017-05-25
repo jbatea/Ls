@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdbool.h>
-#include <sys/acl.h>
 #include <attr/xattr.h> 
 #include "libft.h"
 			/*Defines*/
@@ -64,6 +63,8 @@ typedef struct		s_files
 	char		link[BUF_SIZE];
 	char		right[RIGHT_SIZE];
 	char		*dev;
+	char		*sgid;
+	char		*suid;
 	struct stat	sb;
 	bool		arg;
 	int		size;
@@ -114,5 +115,16 @@ void	my_apply_flags(t_ls *ls, t_files *files);
 bool	my_hidden_file(t_ls *ls, char *name);
 void	my_print_total(t_ls *ls);
 void	my_cmp(t_ls *ls, t_files **files, bool arg);
+bool	my_flags1(t_ls *ls, char *arg);
+int	my_timercmp(t_files *file1, t_files *file2);
+int	my_sizercmp(t_files *file1, t_files *file2);
+int	my_argrcmp(t_files *file1, t_files *file2);
+int	my_arg_order(t_files *file1, t_files *file2);
+void	my_print_dir(t_ls *ls, t_files *files);
+int	my_filetype(DIR **dir, char *name);
+void	my_initright(t_files *files);
+void	my_maj_display(t_ls *ls, t_files *new);
+void	my_check_rdev(t_files *new);
+void	my_listing(t_ls *ls, t_files *f, char *name);
 
 #endif

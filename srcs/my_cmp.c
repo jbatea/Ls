@@ -25,19 +25,6 @@ int	my_timecmp(t_files *file1, t_files *file2)
 	return (ft_strcmp(file1->name, file2->name));
 }
 
-int	my_timercmp(t_files *file1, t_files *file2)
-{
-	int	i;
-
-	if ((i = my_arg_order(file1, file2)))
-		return (i);
-	if ((i = file1->sb.st_mtime - file2->sb.st_mtime))
-		return (i);
-	if ((i = file1->sb.st_mtim.tv_nsec - file2->sb.st_mtim.tv_nsec))
-		return (i);
-	return (ft_strcmp(file2->name, file1->name));
-}
-
 int	my_sizecmp(t_files *file1, t_files *file2)
 {
 	int	i;
@@ -45,17 +32,6 @@ int	my_sizecmp(t_files *file1, t_files *file2)
 	if ((i = my_arg_order(file1, file2)))
 		return (i);
 	if ((i = file2->sb.st_size - file1->sb.st_size))
-		return (i);
-	return (ft_strcmp(file1->name, file2->name));
-}
-
-int	my_sizercmp(t_files *file1, t_files *file2)
-{
-	int	i;
-
-	if ((i = my_arg_order(file1, file2)))
-		return (i);
-	if ((i = file1->sb.st_size - file2->sb.st_size))
 		return (i);
 	return (ft_strcmp(file1->name, file2->name));
 }
@@ -68,16 +44,6 @@ int	my_argcmp(t_files *file1, t_files *file2)
 		return (i);
 	return (ft_strcmp(file1->name, file2->name));
 }
-
-int	my_argrcmp(t_files *file1, t_files *file2)
-{
-	int	i;
-
-	if ((i = my_arg_order(file1, file2)))
-		return (i);
-	return (ft_strcmp(file2->name, file1->name));
-}
-
 
 void	my_cmp(t_ls *ls, t_files **files, bool arg)
 {

@@ -25,7 +25,8 @@ void	my_split_list(t_files *files, t_files **f1, t_files **f2)
 	*f1 = files;
 }
 
-t_files	*my_merge_list(t_ls *ls, t_files *f1, t_files *f2, int (*cmp)(void *, void *))
+t_files	*my_merge_list(t_ls *ls, t_files *f1, t_files *f2,\
+int (*cmp)(void *, void *))
 {
 	t_files	*files;
 

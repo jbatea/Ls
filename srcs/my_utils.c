@@ -1,5 +1,29 @@
 #include "../includes/ft_ls.h"
 
+void	my_initright(t_files *files)
+{
+	int	i;
+
+	i = 0;
+	while (i < 10)
+	{
+		files->right[i] = '-';
+		i++;
+	}
+	files->right[i] = ' ';
+}
+
+void	my_print_dir(t_ls *ls, t_files *files)
+{
+	if (ls->display)
+		ft_printf("\n");
+	if (ls->flags.quote)
+		ft_printf("\"%s\":\n", files->name);
+	else
+		ft_printf("%s:\n", files->name);
+	ls->display++;
+}
+
 void	my_print_total(t_ls *ls)
 {
 	t_files	*tmp;
@@ -13,13 +37,6 @@ void	my_print_total(t_ls *ls)
 		tmp = tmp->next;
 	}
 	ft_printf("total %d\n", total / 2);
-}
-
-void	my_exit(t_ls *ls, char *error)
-{
-	(error) ? ft_printf("%s\n", error) : 0;
-	(ls) ? my_del_list(&(ls->queue)) : 0;
-	exit(EXIT_FAILURE);
 }
 
 void	my_reverse_list(t_files **files)
