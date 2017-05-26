@@ -12,7 +12,7 @@
 
 #include "../../includes/ft_printf.h"
 
-void			ft_printlist(t_lst *lst)
+void			ft_printlist(t_lst *lst, int fd)
 {
 	t_lst		*tmp;
 
@@ -20,7 +20,7 @@ void			ft_printlist(t_lst *lst)
 	while (tmp)
 	{
 		if (tmp->cpy)
-			ft_putstrnull(tmp->cpy, tmp->len);
+			write(fd, tmp->cpy, ft_strlen(tmp->cpy));
 		tmp = tmp->next;
 	}
 }

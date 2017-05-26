@@ -99,6 +99,7 @@ SRC =	ft_putchar.c \
 	  ft_sduporjoin.c \
 	  ft_snduporjoin.c \
 	  ft_printf.c \
+	  ft_fprintf.c \
 	  ft_specret.c \
 	  ft_listinit.c \
 	  ft_newelem.c \

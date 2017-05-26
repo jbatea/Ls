@@ -40,9 +40,8 @@ void	my_print_error(t_ls *ls)
 {
 	while (ls->queue && ls->queue->error)
 	{
-		write(2, "ft_ls: cannot open directory '", 30);
-		write(2, ls->queue->name, ft_strlen(ls->queue->name));
-		write(2, "': Permission denied\n", 21);
+		ft_fprintf(2, "ft_ls: cannot open directory '%s': \
+Permission denied\n", ls->queue->name);
 		my_del_files(&(ls->queue));
 	}
 }

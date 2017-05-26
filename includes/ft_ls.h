@@ -22,6 +22,8 @@
 #define MAJOR(dev)	((unsigned int) ((dev) >> MINORBITS))
 #define MINOR(dev)	((unsigned int) ((dev) & MINORMASK))
 
+#define MALLOC		my_exit(ls, "Malloc Failed")
+
 #define BUF_SIZE	100
 #define SIX_MONTH	15768000
 #define TIME_SIZE	13
@@ -62,6 +64,7 @@ typedef struct		s_files
 	char		time[TIME_SIZE];
 	char		link[BUF_SIZE];
 	char		right[RIGHT_SIZE];
+	bool		error;
 	char		*dev;
 	char		*sgid;
 	char		*suid;
@@ -72,7 +75,6 @@ typedef struct		s_files
 	int		uid;
 	int		lnk;
 	int		blk;
-	bool		error;
 	struct s_files	*next;
 }			t_files;
 
@@ -103,10 +105,11 @@ t_files	*my_add_top_files(t_files **files, char *name);
 void	my_get_rights(t_files *files);
 void	my_check_args(int argc, char **argv, t_ls *ls);
 void	my_reverse_list(t_files **files);
+void	my_reverse_ordered_list(t_files **files, long long int i);
 void	my_del_files(t_files **files);
 void	my_del_list(t_files **files);
 void	my_print_files(t_ls *ls);
-char	*my_files(char *name, char *d_name);
+char	*my_files(t_ls *ls, char *name, char *d_name);
 void	my_sort(t_ls *ls, t_files **files, int (*cmp)(void *, void *));
 void	my_exit(t_ls *ls, char *error);
 void	my_opendir(t_ls *ls, t_files *files);
@@ -124,7 +127,7 @@ void	my_print_dir(t_ls *ls, t_files *files);
 int	my_filetype(DIR **dir, char *name);
 void	my_initright(t_files *files);
 void	my_maj_display(t_ls *ls, t_files *new);
-void	my_check_rdev(t_files *new);
+void	my_check_rdev(t_ls *ls, t_files *new);
 void	my_listing(t_ls *ls, t_files *f, char *name);
 
 #endif

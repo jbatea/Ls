@@ -11,7 +11,7 @@ SRC_NAME	=	main.c			\
 			my_flags.c	\
 			my_cmp.c	\
 			my_reverse_cmp.c	\
-			my_handle_lst.c	\
+			my_lst_handler.c	\
 			my_listing.c	\
 
 SRC		=	$(addprefix srcs/, $(SRC_NAME))

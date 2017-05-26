@@ -16,21 +16,21 @@ int	my_filetype(DIR **dir, char *name)
 	return (REGULAR);
 }
 
-char	*my_files(char *name, char *d_name)
+char	*my_files(t_ls *ls, char *name, char *d_name)
 {
 	char	*tmp;
 	char	*files;
 
 	if (name[ft_strlen(name) - 1] != '/')
-		tmp = ft_strjoin(name, "/");
+		(tmp = ft_strjoin(name, "/")) ? 0 : MALLOC;
 	else
-		tmp = ft_strdup(name);
-	files = ft_strjoin(tmp, d_name);
+		(tmp = ft_strdup(name)) ? 0 : MALLOC;
+	(files = ft_strjoin(tmp, d_name)) ? 0 : MALLOC;
 	ft_strdel(&tmp);
 	return (files);
 }
 
-void	my_check_rdev(t_files *new)
+void	my_check_rdev(t_ls *ls, t_files *new)
 {
 	char	*major;
 	char	*minor;
@@ -38,16 +38,16 @@ void	my_check_rdev(t_files *new)
 
 	if (new->sb.st_rdev)
 	{
-		major = ft_itoa(MAJOR(new->sb.st_rdev));
-		tmp = ft_strjoin(major, ", ");
+		(major = ft_itoa(MAJOR(new->sb.st_rdev))) ? 0 : MALLOC;
+		(tmp = ft_strjoin(major, ", ")) ? 0 : MALLOC;
 		ft_strdel(&major);
-		minor = ft_itoa(MINOR(new->sb.st_rdev));
-		new->dev = ft_strjoin(tmp, minor);
+		(minor = ft_itoa(MINOR(new->sb.st_rdev))) ? 0 : MALLOC;
+		(new->dev = ft_strjoin(tmp, minor)) ? 0 : MALLOC;
 		ft_strdel(&minor);
 		ft_strdel(&tmp);
 	}
 	else
-		new->dev = ft_itoa(new->sb.st_size);
+		(new->dev = ft_itoa(new->sb.st_size)) ? 0 : MALLOC;
 	new->size = ft_strlen(new->dev);
 }
 

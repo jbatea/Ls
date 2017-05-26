@@ -37,7 +37,7 @@ void				ft_printarg(const char *format, va_list pa, t_lst *lst);
 char				*ft_patype(va_list pa, int c, int *tab, t_lst *lst);
 t_lst				*ft_listinit();
 void				ft_newelem(t_lst *node, char *str);
-void				ft_printlist(t_lst *lst);
+void				ft_printlist(t_lst *lst, int fd);
 char				*ft_isstr(char *tmp);
 char				*ft_elemspec(char *tmp, va_list pa, t_lst *lst);
 char				*ft_strlower_free(char *str);

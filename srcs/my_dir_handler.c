@@ -23,7 +23,6 @@ void	my_check_dir(t_ls *ls)
 	t_files *files;
 	int	ret;
 
-
 	my_reverse_list(&(ls->files));
 	files = ls->files;
 	while (files)
@@ -38,15 +37,15 @@ void	my_check_dir(t_ls *ls)
 
 bool	my_hidden_file(t_ls *ls, char *name)
 {
+	if (name[0] != '.')
+		return (true);
 	if (name[0] == '.' && (ls->flags.all || ls->flags.directory))
 		return (true);
 	if (ft_strscmp(name, ".", "..") && name[0] == '.' &&\
 		ls->flags.almost_all)
 		return (true);
-	if (name[ft_strlen(name) - 1] == '~' && ls->flags.ignore_backups)
+	if (ls->flags.ignore_backups && name[ft_strlen(name) - 1] == '~')
 		return (false);
-	if (name[0] != '.')
-		return (true);
 	return (false);
 }
 
@@ -67,7 +66,7 @@ void	my_readdir(t_ls *ls, t_files *files, DIR *dir)
 	{
 		if (my_hidden_file(ls, dirent->d_name))
 		{
-			path = my_files(files->name, dirent->d_name);
+			path = my_files(ls, files->name, dirent->d_name);
 			my_add_files(ls, &files, path, NOTARG);
 			ft_strdel(&path);
 		}

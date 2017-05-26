@@ -3,7 +3,7 @@
 void	my_del_files(t_files **files)
 {
 	t_files *tmp;
-	
+
 	tmp = (*files)->next;
 	ft_strdel(&((*files)->name));
 	ft_strdel(&((*files)->dev));
@@ -33,15 +33,13 @@ t_files	*my_new_files(t_ls *ls, char *name, bool arg)
 	char		*gid;
 	char		*uid;
 
-	new = (t_files *)malloc(sizeof(t_files));
-	(!new) ? my_exit(NULL, "Malloc Failed") : 0;
-	ft_bzero(new, sizeof(t_files));
-	new->name = ft_strdup(name);
+	(new = (t_files *)ft_memalloc(sizeof(t_files))) ? 0 : MALLOC;
+	(new->name = ft_strdup(name)) ? 0 : MALLOC;
 	new->arg = arg;
 	if (!lstat(name, &sb))
 	{
 		new->sb = sb;
-		my_check_rdev(new);
+		my_check_rdev(ls, new);
 		new->blk = ft_count(sb.st_blocks / 2);
 		if ((uid = getpwuid(sb.st_uid)->pw_name))
 			new->uid = (int)ft_strlen(uid);

@@ -1,6 +1,6 @@
 #include "../../includes/ft_printf.h"
 
-void	my_newelem(t_lst *lst, char *str, int i)
+static void	my_newelem(t_lst *lst, char *str, int i)
 {
 	t_lst		*new;
 	t_lst		*cur;
@@ -18,7 +18,7 @@ void	my_newelem(t_lst *lst, char *str, int i)
 	}
 }
 
-char	*my_space_display(long int n)
+static char	*my_space_display(long int n)
 {
 	char	*str;
 
@@ -28,7 +28,7 @@ char	*my_space_display(long int n)
 	return (str);
 }
 
-char	*my_pa(va_list pa, char c)
+static char	*my_pa(va_list pa, char c)
 {
 	char	*s;
 
@@ -45,7 +45,7 @@ char	*my_pa(va_list pa, char c)
 	return (ft_ltoa(va_arg(pa, long int)));
 }
 
-void	ft_add_arg(char *format, va_list pa, t_lst *lst)
+static void	ft_add_arg(char *format, va_list pa, t_lst *lst)
 {
 	int	i;
 	char	*str;
@@ -74,7 +74,7 @@ void	ft_add_arg(char *format, va_list pa, t_lst *lst)
 	(format[i]) ? ft_add_arg(format + i, pa, lst) : 0;
 }
 
-int	ft_printf(const char *format, ...)
+int	ft_fprintf(int fd, const char *format, ...)
 {
 	va_list pa;
 	int	ret;
@@ -86,7 +86,7 @@ int	ft_printf(const char *format, ...)
 	{
 		va_start(pa, format);
 		ft_add_arg((char *)format, pa, lst);
-		ft_printlist(lst, 1);
+		ft_printlist(lst, fd);
 		ft_lstfree(&lst);
 		va_end(pa);
 	}
