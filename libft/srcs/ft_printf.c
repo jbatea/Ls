@@ -61,13 +61,13 @@ void	ft_add_arg(char *format, va_list pa, t_lst *lst)
 		{
 			if ((str = my_pa(pa, format[i])))
 			{
-				my_newelem(lst, str, strlen(str));
+				my_newelem(lst, str, ft_strlen(str));
 				ft_strdel(&str);
 			}
 			i++;
 		}
 		str = my_pa(pa, format[i]);
-		my_newelem(lst, str, strlen(str));
+		my_newelem(lst, str, ft_strlen(str));
 		ft_strdel(&str);
 		i++;
 	}
