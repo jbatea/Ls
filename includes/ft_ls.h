@@ -58,23 +58,30 @@ typedef struct		s_flags
 	bool		indicator_style;
 }			t_flags;
 
+typedef struct		s_display
+{
+	int		size;
+	int		gid;
+	int		uid;
+	int		lnk;
+	int		blk;
+	int		display;
+
+}			t_display;
+
 typedef struct		s_files
 {
 	char		*name;
 	char		time[TIME_SIZE];
 	char		link[BUF_SIZE];
 	char		right[RIGHT_SIZE];
-	bool		error;
+	int		type;
 	char		*dev;
 	char		*sgid;
 	char		*suid;
 	struct stat	sb;
 	bool		arg;
-	int		size;
-	int		gid;
-	int		uid;
-	int		lnk;
-	int		blk;
+	t_display	d;
 	struct s_files	*next;
 }			t_files;
 
@@ -92,12 +99,7 @@ typedef struct		s_ls
 	t_flags		flags;
 	t_files		*files;
 	t_files		*queue;
-	int		display;
-	int		size;
-	int		gid;
-	int		uid;
-	int		lnk;
-	int		blk;
+	t_display	d;
 }			t_ls;
 
 t_files	*my_add_files(t_ls *ls, t_files **files, char *name, bool arg);
@@ -124,7 +126,7 @@ int	my_sizercmp(t_files *file1, t_files *file2);
 int	my_argrcmp(t_files *file1, t_files *file2);
 int	my_arg_order(t_files *file1, t_files *file2);
 void	my_print_dir(t_ls *ls, t_files *files);
-int	my_filetype(DIR **dir, char *name);
+int	my_filetype(t_files *files);
 void	my_initright(t_files *files);
 void	my_maj_display(t_ls *ls, t_files *new);
 void	my_check_rdev(t_ls *ls, t_files *new);

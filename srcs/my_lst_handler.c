@@ -39,13 +39,14 @@ t_files	*my_new_files(t_ls *ls, char *name, bool arg)
 	if (!lstat(name, &sb))
 	{
 		new->sb = sb;
+		new->type = my_filetype(new);
 		my_check_rdev(ls, new);
-		new->blk = ft_count(sb.st_blocks / 2);
+		new->d.blk = ft_count(sb.st_blocks / 2);
 		if ((uid = getpwuid(sb.st_uid)->pw_name))
-			new->uid = (int)ft_strlen(uid);
+			new->d.uid = (int)ft_strlen(uid);
 		if ((gid = getgrgid(sb.st_gid)->gr_name))
-			new->gid = (int)ft_strlen(gid);
-		new->lnk = ft_count(sb.st_nlink);
+			new->d.gid = (int)ft_strlen(gid);
+		new->d.lnk = ft_count(sb.st_nlink);
 	}
 	my_maj_display(ls, new);
 	return (new);

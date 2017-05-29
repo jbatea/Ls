@@ -1,19 +1,17 @@
 #include "../includes/ft_ls.h"
 #include <stdio.h>
 
-int	my_dir(char *name)
+int	my_dir(t_files *files)
 {
 	int	i;
-	DIR	*dir;
 	int	ret;
 
-	dir = NULL;
-	ret = my_filetype(&dir, name);
-	if (ret == DIRECTORY)
+	ret = -1;
+	if (S_ISDIR(files->sb.st_mode))
 	{
-		i = ft_strrchr_cnt(name, '/') + 1;
-		ret = (ft_strscmp(name + i, ".", "..") ? DIRECTORY : -1);
-		closedir(dir);
+		i = ft_strrchr_cnt(files->name, '/') + 1;
+		ret = (ft_strscmp(files->name + i, ".", "..") ?\
+		DIRECTORY : -1);
 	}
 	return (ret);
 }
@@ -27,8 +25,8 @@ void	my_check_dir(t_ls *ls)
 	files = ls->files;
 	while (files)
 	{
-		ret = my_dir(files->name);
-		if (ret == DIRECTORY || ret == ERROR)
+		ret = my_dir(files);
+		if (ret == DIRECTORY)
 			my_add_top_files(&(ls->queue), files->name);
 		files = files->next;
 	}
@@ -37,6 +35,8 @@ void	my_check_dir(t_ls *ls)
 
 bool	my_hidden_file(t_ls *ls, char *name)
 {
+	if (ls->flags.ignore_backups && name[ft_strlen(name) - 1] == '~')
+		return (false);
 	if (name[0] != '.')
 		return (true);
 	if (name[0] == '.' && (ls->flags.all || ls->flags.directory))
@@ -44,24 +44,25 @@ bool	my_hidden_file(t_ls *ls, char *name)
 	if (ft_strscmp(name, ".", "..") && name[0] == '.' &&\
 		ls->flags.almost_all)
 		return (true);
-	if (ls->flags.ignore_backups && name[ft_strlen(name) - 1] == '~')
-		return (false);
 	return (false);
 }
 
-void	my_readdir(t_ls *ls, t_files *files, DIR *dir)
+void	my_readdir(t_ls *ls, t_files *files)
 {
 	char		*path;
 	struct dirent	*dirent;
+	DIR		*dir;
 
 	path = NULL;
-	if ((ls->flags.recursive || ls->error.args))
+	if (!(dir = opendir(files->name)))
+		return;
+	if ((ls->flags.recursive || ls->error.args > 1))
 		my_print_dir(ls, files);
-	ls->size = 0;
-	ls->gid = 0;
-	ls->uid = 0;
-	ls->lnk = 0;
-	ls->blk = 0;
+	ls->d.size = 0;
+	ls->d.gid = 0;
+	ls->d.uid = 0;
+	ls->d.lnk = 0;
+	ls->d.blk = 0;
 	while ((dirent = readdir(dir)))
 	{
 		if (my_hidden_file(ls, dirent->d_name))
@@ -73,20 +74,14 @@ void	my_readdir(t_ls *ls, t_files *files, DIR *dir)
 		dirent = NULL;
 	}
 	closedir(dir);
-
 }
 
 void	my_opendir(t_ls *ls, t_files *files)
 {
-	DIR		*dir;
-	int		ret;
-
-	dir = NULL;
-	ret = my_filetype(&dir, files->name);
-	(ret == DIRECTORY) ? my_readdir(ls, files, dir) : 0;
-	if (files->arg && ret != DIRECTORY)
+	(files->type == DIRECTORY) ? my_readdir(ls, files) : 0;
+	if (files->arg && files->type != DIRECTORY)
 	{
 		my_apply_flags(ls, files);
-		ls->display++;
+		ls->d.display++;
 	}
 }

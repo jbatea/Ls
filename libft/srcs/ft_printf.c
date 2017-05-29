@@ -18,7 +18,7 @@ void	my_newelem(t_lst *lst, char *str, int i)
 	}
 }
 
-char	*my_space_display(long int n)
+char	*my_space_display(int n)
 {
 	char	*str;
 
@@ -35,7 +35,7 @@ char	*my_pa(va_list pa, char c)
 	if (c == 's')
 		return (ft_strdup(va_arg(pa, char *)));
 	if (c == '*')
-		return (my_space_display(va_arg(pa, long int)));
+		return (my_space_display(va_arg(pa, int)));
 	if (c == 'c')
 	{
 		s = ft_strnew(sizeof(char));

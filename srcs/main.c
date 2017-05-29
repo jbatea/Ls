@@ -38,7 +38,7 @@ void	my_help(t_ls *ls)
 
 void	my_print_error(t_ls *ls)
 {
-	while (ls->queue && ls->queue->error)
+	while (ls->queue && ls->queue->type == ERROR)
 	{
 		ft_fprintf(2, "ft_ls: cannot open directory '%s': \
 Permission denied\n", ls->queue->name);
@@ -58,7 +58,7 @@ void	my_ls(t_ls *ls)
 			(ls->flags.not_sort) ? 0 :\
 			my_cmp(ls, &(ls->files), NOTARG);
 			(ls->flags.recursive) ? my_check_dir(ls) : 0;
-			(ls->flags.listing || ls->flags.size) ?\
+			((ls->flags.listing || ls->flags.size)) ?\
 			my_print_total(ls) : 0;
 			my_print_files(ls);
 		}

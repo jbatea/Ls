@@ -5,10 +5,10 @@ void	my_opt_flags(t_ls *ls, t_files *files, char *name)
 	if (ls->flags.listing)
 		my_listing(ls, files, name);
 	else if (ls->flags.size && !ls->flags.listing && !ls->flags.quote)
-		ft_printf("%*d   %s\n", ls->blk - files->blk,\
+		ft_printf("%*d   %s\n", ls->d.blk - files->d.blk,\
 		files->sb.st_blocks / 2, name);
 	else if (ls->flags.size && ls->flags.quote && !ls->flags.listing)
-		ft_printf("%*d  \"%s\"\n", ls->blk - files->blk,\
+		ft_printf("%*d  \"%s\"\n", ls->d.blk - files->d.blk,\
 		files->sb.st_blocks / 2, name);
 	else if (ls->flags.quote)
 		ft_printf("\"%s\"\n", name);

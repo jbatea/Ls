@@ -29,25 +29,25 @@ bool	my_group_and_size(t_ls *ls, t_files *f, char *name)
 {
 	if (ls->flags.no_group && !ls->flags.size && ls->flags.quote)
 	{
-		ft_printf("%s %*d %s %**s %s \"%s\"%s\n", f->right,\
-		ls->lnk - f->lnk, f->sb.st_nlink, f->suid, ls->uid - f->uid,\
-		ls->size - f->size, f->dev, f->time, name, f->link);
+		ft_printf("%s %*d %s %**s %s \"%s\"%s\n", f->right, ls->d.lnk \
+		- f->d.lnk, f->sb.st_nlink, f->suid, ls->d.uid - f->d.uid,\
+		ls->d.size - f->d.size, f->dev, f->time, name, f->link);
 		return (true);
 	}
 	if (ls->flags.no_group && ls->flags.size && ls->flags.quote)
 	{
-		ft_printf("%*d %s %*d %s %**s %s \"%s\"%s\n", \
-		ls->blk - f->blk, f->sb.st_blocks / 2, f->right,\
-		 ls->lnk - f->lnk, f->sb.st_nlink, f->suid, ls->uid - f->uid,\
-		 ls->size - f->size, f->dev, f->time, name, f->link);
+		ft_printf("%*d %s %*d %s %**s %s \"%s\"%s\n", ls->d.blk -\
+		f->d.blk, f->sb.st_blocks / 2, f->right, ls->d.lnk - f->d.lnk,\
+		f->sb.st_nlink, f->suid, ls->d.uid - f->d.uid,\
+		ls->d.size - f->d.size, f->dev, f->time, name, f->link);
 		return (true);
 	}
 	if (ls->flags.no_group && ls->flags.size)
 	{
-		ft_printf("%*d %s %*d %s %**s %s %s %s\n", ls->blk - f->blk,\
-		f->sb.st_blocks / 2, f->right, ls->lnk - f->lnk, \
-		f->sb.st_nlink, f->suid, ls->uid - f->uid, ls->size - f->size,\
-		 f->dev, f->time, name, f->link);
+		ft_printf("%*d %s %*d %s %**s %s %s %s\n", ls->d.blk -\
+		f->d.blk, f->sb.st_blocks / 2, f->right, ls->d.lnk - f->d.lnk,\
+		f->sb.st_nlink, f->suid, ls->d.uid - f->d.uid,\
+		ls->d.size - f->d.size, f->dev, f->time, name, f->link);
 		return (true);
 	}
 	return (false);
@@ -57,28 +57,28 @@ void	my_size_and_quote(t_ls *ls, t_files *f, char *name)
 {
 	if (ls->flags.size && ls->flags.quote)
 	{
-		ft_printf("%*d %s %*d %s %*s %**s %s \"%s\"%s\n", \
-		ls->blk - f->blk, f->sb.st_blocks / 2, f->right,\
-		ls->lnk - f->lnk, f->sb.st_nlink, f->suid, ls->uid - f->uid,\
-		f->sgid, ls->gid - f->gid, ls->size - f->size, f->dev,\
+		ft_printf("%*d %s %*d %s %*s %**s %s \"%s\"%s\n", ls->d.blk -\
+		f->d.blk, f->sb.st_blocks / 2, f->right, ls->d.lnk - f->d.lnk,\
+		f->sb.st_nlink, f->suid, ls->d.uid - f->d.uid, f->sgid,\
+		ls->d.gid - f->d.gid, ls->d.size - f->d.size, f->dev,\
 		f->time, name, f->link);
 		return;
 	}
 	if (ls->flags.size)
 	{
 		ft_printf("%*d %s %*d %s %*s %**s %s %s %s\n",\
-		ls->blk - f->blk, f->sb.st_blocks / 2, f->right,\
-		ls->lnk - f->lnk, f->sb.st_nlink, f->suid, ls->uid - f->uid,\
-		f->sgid, ls->gid- f->gid, ls->size - f->size, f->dev, f->time,\
-		 name, f->link);
+		ls->d.blk - f->d.blk, f->sb.st_blocks / 2, f->right,\
+		ls->d.lnk - f->d.lnk, f->sb.st_nlink, f->suid,\
+		ls->d.uid - f->d.uid, f->sgid, ls->d.gid - f->d.gid,\
+		ls->d.size - f->d.size, f->dev, f->time, name, f->link);
 		return;
 	}
 	if (ls->flags.quote)
 	{
-		ft_printf("%s %*d %s %*s %**s %s \"%s\"%s\n", f->right,\
-		ls->lnk - f->lnk, f->sb.st_nlink, f->suid, ls->uid - f->uid,\
-		 f->sgid, ls->gid - f->gid, ls->size - f->size,\
-		f->dev, f->time, name, f->link);
+		ft_printf("%s %*d %s %*s %**s %s \"%s\"%s\n",\
+		f->right,ls->d.lnk - f->d.lnk, f->sb.st_nlink,\
+		f->suid,ls->d.uid - f->d.uid, f->sgid, ls->d.gid - f->d.gid,\
+		ls->d.size - f->d.size,f->dev, f->time, name, f->link);
 		return;
 	}
 }
@@ -86,23 +86,32 @@ void	my_size_and_quote(t_ls *ls, t_files *f, char *name)
 void	my_listing(t_ls *ls, t_files *f, char *name)
 {
 	my_get_rights(f);
-	my_get_time(f);
-	my_check_link(f);
-	f->suid = getpwuid(f->sb.st_uid)->pw_name;
-	f->sgid = getgrgid(f->sb.st_gid)->gr_name;
+	if (f->sb.st_mtime)
+	{
+		my_get_time(f);
+		f->suid = getpwuid(f->sb.st_uid)->pw_name;
+		f->sgid = getgrgid(f->sb.st_gid)->gr_name;
+		my_check_link(f);
+	}
+	else
+	{
+		ft_printf("%c????????? ? ? ? ?              ? %s\n",\
+		f->right[0], name);
+		return;
+	}
 	if (!ls->flags.no_group && !ls->flags.size && !ls->flags.quote)
 	{
 		ft_printf("%s %*d %s %*s %**s %s %s %s\n", f->right,\
-		ls->lnk - f->lnk, f->sb.st_nlink, f->suid,\
-		ls->uid - f->uid, f->sgid, ls->gid - f->gid,\
-		ls->size - f->size, f->dev, f->time, name, f->link);
+		ls->d.lnk - f->d.lnk, f->sb.st_nlink, f->suid,\
+		ls->d.uid - f->d.uid, f->sgid, ls->d.gid - f->d.gid,\
+		ls->d.size - f->d.size, f->dev, f->time, name, f->link);
 		return;
 	}
 	if (ls->flags.no_group && !ls->flags.size && !ls->flags.quote)
 	{
-		ft_printf("%s %*d %s %**s %s %s %s\n", f->right,\
-		ls->lnk - f->lnk, f->sb.st_nlink, f->suid, ls->uid - f->uid,\
-		ls->size - f->size, f->dev, f->time, name, f->link);
+		ft_printf("%s %*d %s %**s %s %s %s\n", f->right, ls->d.lnk\
+		- f->d.lnk, f->sb.st_nlink, f->suid, ls->d.uid - f->d.uid,\
+		ls->d.size - f->d.size, f->dev, f->time, name, f->link);
 		return;
 	}
 	if (my_group_and_size(ls, f, name))

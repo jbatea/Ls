@@ -15,13 +15,13 @@ void	my_initright(t_files *files)
 
 void	my_print_dir(t_ls *ls, t_files *files)
 {
-	if (ls->display)
+	if (ls->d.display)
 		ft_printf("\n");
 	if (ls->flags.quote)
 		ft_printf("\"%s\":\n", files->name);
 	else
 		ft_printf("%s:\n", files->name);
-	ls->display++;
+	ls->d.display++;
 }
 
 void	my_print_total(t_ls *ls)

@@ -1,18 +1,19 @@
 #include "../includes/ft_ls.h"
 
-int	my_filetype(DIR **dir, char *name)
+int	my_filetype(t_files *files)
 {
-	struct stat 	sb;
+	DIR	*dir;
 
-	if (!lstat(name, &sb))
+	dir = NULL;
+	if (S_ISDIR(files->sb.st_mode) && (dir = opendir(files->name)))
 	{
-		if (S_ISDIR(sb.st_mode) && (*dir = opendir(name)))
-			return (DIRECTORY);
-		if (S_ISDIR(sb.st_mode) && !(*dir))
-			return (ERROR);
-		if (S_ISLNK(sb.st_mode))
-			return (LNK);
+		closedir(dir);
+		return (DIRECTORY);
 	}
+	if (S_ISDIR(files->sb.st_mode) && !dir)
+		return (ERROR);
+	if (S_ISLNK(files->sb.st_mode))
+		return (LNK);
 	return (REGULAR);
 }
 
@@ -48,20 +49,17 @@ void	my_check_rdev(t_ls *ls, t_files *new)
 	}
 	else
 		(new->dev = ft_itoa(new->sb.st_size)) ? 0 : MALLOC;
-	new->size = ft_strlen(new->dev);
+	new->d.size = ft_strlen(new->dev);
 }
 
 void	my_maj_display(t_ls *ls, t_files *new)
 {
 	if (ls)
 	{
-		(ls->size < new->size) ? (ls->size = new->size) : 0;
-		(ls->uid < new->uid) ? (ls->uid = new->uid) : 0;
-		(ls->gid < new->gid) ? (ls->gid = new->gid) : 0;
-		(ls->lnk < new->lnk) ? (ls->lnk = new->lnk) : 0;
-		(ls->blk < new->blk) ? (ls->blk = new->blk) : 0;
+		(ls->d.size < new->d.size) ? (ls->d.size = new->d.size) : 0;
+		(ls->d.uid < new->d.uid) ? (ls->d.uid = new->d.uid) : 0;
+		(ls->d.gid < new->d.gid) ? (ls->d.gid = new->d.gid) : 0;
+		(ls->d.lnk < new->d.lnk) ? (ls->d.lnk = new->d.lnk) : 0;
+		(ls->d.blk < new->d.blk) ? (ls->d.blk = new->d.blk) : 0;
 	}
-	if (S_ISDIR(new->sb.st_mode) && ((S_IRGRP & new->sb.st_mode)\
-	 != S_IRGRP))
-		new->error = true;
 }
