@@ -51,19 +51,22 @@ void	my_ls(t_ls *ls)
 	my_print_error(ls);
 	if (ls->queue && ls->queue->name)
 	{
-		my_add_files(ls, &(ls->files), ls->queue->name,\
-	ls->queue->arg);
-		(ls->flags.directory) ? my_apply_flags(ls, ls->queue) : 0;
-		my_del_files(&(ls->queue));
-		my_opendir(ls, ls->files);
-		my_del_files(&(ls->files));
-		(ls->flags.not_sort) ? 0 : my_cmp(ls, &(ls->files), NOTARG);
-		if (ls->flags.recursive && !ls->flags.directory)
-			my_check_dir(ls);
-		if ((ls->flags.listing || ls->flags.size) && \
-			 !ls->flags.directory)
-			my_print_total(ls);
-		(ls->flags.directory) ? 0 : my_print_files(ls);
+		if (!ls->flags.directory)
+		{
+			my_opendir(ls, ls->queue);
+			my_del_files(&(ls->queue));
+			(ls->flags.not_sort) ? 0 :\
+			my_cmp(ls, &(ls->files), NOTARG);
+			(ls->flags.recursive) ? my_check_dir(ls) : 0;
+			(ls->flags.listing || ls->flags.size) ?\
+			my_print_total(ls) : 0;
+			my_print_files(ls);
+		}
+		else
+		{
+			my_apply_flags(ls, ls->queue);
+			my_del_files(&(ls->queue));
+		}
 		my_ls(ls);
 	}
 }

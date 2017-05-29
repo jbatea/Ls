@@ -55,7 +55,7 @@ void	my_readdir(t_ls *ls, t_files *files, DIR *dir)
 	struct dirent	*dirent;
 
 	path = NULL;
-	if ((ls->flags.recursive || ls->error.args) && !ls->flags.directory)
+	if ((ls->flags.recursive || ls->error.args))
 		my_print_dir(ls, files);
 	ls->size = 0;
 	ls->gid = 0;
@@ -67,7 +67,7 @@ void	my_readdir(t_ls *ls, t_files *files, DIR *dir)
 		if (my_hidden_file(ls, dirent->d_name))
 		{
 			path = my_files(ls, files->name, dirent->d_name);
-			my_add_files(ls, &files, path, NOTARG);
+			my_add_files(ls, &(ls->files), path, NOTARG);
 			ft_strdel(&path);
 		}
 		dirent = NULL;
