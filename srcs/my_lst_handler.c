@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_lst_handler.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 15:54:09 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 15:56:21 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_ls.h"
 
-void	my_del_files(t_files **files)
+void			my_del_files(t_files **files)
 {
-	t_files *tmp;
+	t_files		*tmp;
 
 	tmp = (*files)->next;
 	ft_strdel(&((*files)->name));
@@ -11,10 +23,10 @@ void	my_del_files(t_files **files)
 	*files = tmp;
 }
 
-void	my_del_list(t_files **files)
+void			my_del_list(t_files **files)
 {
-	t_files *tmp;
-	t_files *ptmp;
+	t_files		*tmp;
+	t_files		*ptmp;
 
 	tmp = *files;
 	while (tmp)
@@ -26,10 +38,10 @@ void	my_del_list(t_files **files)
 	}
 }
 
-t_files	*my_new_files(t_ls *ls, char *name, bool arg)
+t_files			*my_new_files(t_ls *ls, char *name, bool arg)
 {
 	t_files		*new;
-	struct stat 	sb;
+	struct stat sb;
 	char		*gid;
 	char		*uid;
 
@@ -52,10 +64,10 @@ t_files	*my_new_files(t_ls *ls, char *name, bool arg)
 	return (new);
 }
 
-t_files	*my_add_files(t_ls *ls, t_files **files, char *name, bool arg)
+t_files			*my_add_files(t_ls *ls, t_files **files, char *name, bool arg)
 {
-	t_files	*new;
-	t_files	*tmp;
+	t_files		*new;
+	t_files		*tmp;
 
 	new = my_new_files(ls, name, arg);
 	if (!*files)
@@ -70,10 +82,10 @@ t_files	*my_add_files(t_ls *ls, t_files **files, char *name, bool arg)
 	return (new);
 }
 
-t_files	*my_add_top_files(t_files **files, char *name)
+t_files			*my_add_top_files(t_files **files, char *name)
 {
-	t_files	*new;
-	t_files	*tmp;
+	t_files		*new;
+	t_files		*tmp;
 
 	new = my_new_files(NULL, name, NOTARG);
 	if (!*files)

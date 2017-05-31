@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_flags.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 14:59:47 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 15:01:54 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_ls.h"
 
 bool	my_flagscmp(char *arg, char *s1, char *s2, bool *flags)
@@ -17,7 +29,7 @@ bool	my_flags3(t_ls *ls, char *arg)
 	ret = false;
 	my_flagscmp(arg, "r", "-reverse", &ls->flags.reverse) ? (ret = 1) : 0;
 	my_flagscmp(arg, "l", "-listing", &ls->flags.listing) ? (ret = 1) : 0;
-	my_flagscmp(arg, "G", "-no-group", &ls->flags.no_group) ? (ret = 1) :0;
+	my_flagscmp(arg, "G", "-no-group", &ls->flags.no_group) ? (ret = 1) : 0;
 	if (!ft_strscmp(arg, "t", "-time"))
 	{
 		ls->flags.time = true;
@@ -77,7 +89,7 @@ bool	my_flags1(t_ls *ls, char *arg)
 		(ret = 1) : 0;
 	my_flagscmp(arg, "s", "-size", &ls->flags.size) ? (ret = 1) : 0;
 	my_flagscmp(arg, "Q", "-quote-name", &ls->flags.quote) ? (ret = 1) : 0;
-	my_flagscmp(arg, "p", "-indicator-style", &ls->flags.indicator_style)?\
+	my_flagscmp(arg, "p", "-indicator-style", &ls->flags.indicator_style) ?\
 		(ret = 1) : 0;
 	my_flagscmp(arg, "d", "-directory", &ls->flags.directory) ?\
 		(ret = 1) : 0;

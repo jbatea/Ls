@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_get_rights.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 15:48:37 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 15:49:20 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_ls.h"
 
 void	my_setread(t_files *files)
@@ -33,12 +45,10 @@ void	my_setexec(t_files *files)
 void	my_setstickybit(t_files *files)
 {
 	if ((S_ISVTX & files->sb.st_mode) != S_ISVTX)
-		return;
+		return ;
 	((S_IXOTH & files->sb.st_mode) == S_IXOTH) ?\
 		ft_strncpy(files->right + 9, "t", 1)\
 			: ft_strncpy(files->right + 9, "T", 1);
-	if (S_ISDIR(files->sb.st_mode))
-		return;
 	((S_IXUSR & files->sb.st_mode) == S_IXUSR) ?\
 		ft_strncpy(files->right + 3, "s", 1) :\
 			ft_strncpy(files->right + 3, "S", 1);
@@ -48,7 +58,7 @@ void	my_setstickybit(t_files *files)
 }
 
 void	my_get_rights(t_files *files)
-{ 
+{
 	my_initright(files);
 	if (S_ISDIR(files->sb.st_mode))
 		files->right[0] = 'd';
@@ -66,8 +76,8 @@ void	my_get_rights(t_files *files)
 	my_setwrite(files);
 	my_setexec(files);
 	my_setstickybit(files);
-	if (listxattr(files->name, NULL, 0) > 0)
-		ft_strncpy(files->right + 10, "@", 1);
-	if (acl_get_file(files->name, 0x00000100))
+	if (acl_get_file(files->name, ACL_TYPE_EXTENDED))
 		ft_strncpy(files->right + 10, "+", 1);
+	if (listxattr(files->name, NULL, 0, 0) > 0)
+		ft_strncpy(files->right + 10, "@", 1);
 }

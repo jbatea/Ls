@@ -6,7 +6,7 @@
 /*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/02/15 16:03:16 by jbateau           #+#    #+#             */
-/*   Updated: 2016/05/01 18:54:47 by jbateau          ###   ########.fr       */
+/*   Updated: 2017/05/31 14:30:10 by jbateau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,6 @@ char				*ft_applysharp(char s, char *tmp, char f);
 char				*ft_pacnull(char *str, int len);
 void				ft_freeall(int *tab, int *tab1, char *tmp);
 char				*ft_iscnull(char *s, t_lst *lst, int *tab);
-int				ft_fprintf(int fd, const char *format, ...);
+int					ft_fprintf(int fd, const char *format, ...);
 
 #endif

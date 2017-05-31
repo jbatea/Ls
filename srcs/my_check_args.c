@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_check_args.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 14:56:11 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 14:57:13 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_ls.h"
 
-size_t	my_mode(char *arg)
+size_t			my_mode(char *arg)
 {
-	struct	stat	sb;
-	int		n;
+	struct stat	sb;
+	int			n;
 
 	n = lstat(arg, &sb);
 	if (!n && (S_ISREG(sb.st_mode) || S_ISDIR(sb.st_mode)\
@@ -12,7 +24,7 @@ size_t	my_mode(char *arg)
 	return (0);
 }
 
-void	my_print_errors(t_ls *ls, char c, char *arg)
+void			my_print_errors(t_ls *ls, char c, char *arg)
 {
 	ls->error.errors = ls->error.errors + 1;
 	if (c == '-')
@@ -26,11 +38,11 @@ void	my_print_errors(t_ls *ls, char c, char *arg)
 No such file or directory\n", arg);
 }
 
-bool	my_split_arg(t_ls *ls, char *arg)
+bool			my_split_arg(t_ls *ls, char *arg)
 {
-	int	i;
-	char	*tmp;
-	bool	ret;
+	int			i;
+	char		*tmp;
+	bool		ret;
 
 	i = 0;
 	tmp = NULL;
@@ -49,9 +61,9 @@ bool	my_split_arg(t_ls *ls, char *arg)
 	return (ret);
 }
 
-void	my_check_args(int argc, char **argv, t_ls *ls)
+void			my_check_args(int argc, char **argv, t_ls *ls)
 {
-	int	i;
+	int			i;
 
 	i = 1;
 	while (i < argc)
@@ -59,7 +71,7 @@ void	my_check_args(int argc, char **argv, t_ls *ls)
 		if ((my_mode(argv[i])))
 			my_add_files(ls, &(ls->queue), argv[i], ARG);
 		else if (argv[i][0] == '-' && (my_flags1(ls, argv[i] + 1) ||\
-		 my_split_arg(ls, argv[i] + 1)))
+					my_split_arg(ls, argv[i] + 1)))
 		{
 			ls->error.flags = ls->error.flags + 1;
 			ls->error.args = ls->error.args - 1;

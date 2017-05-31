@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_intchr.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 14:45:59 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 14:46:22 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/libft.h"
 
-int	ft_intnchr(char *line)
+int			ft_intnchr(char *line)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*str;
 
 	i = 0;
@@ -19,10 +31,10 @@ int	ft_intnchr(char *line)
 	return (i);
 }
 
-int	ft_intrchr(char *line)
+int			ft_intrchr(char *line)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*str;
 
 	i = ft_strlen(line) - 2;
@@ -35,7 +47,7 @@ int	ft_intrchr(char *line)
 	return (i);
 }
 
-int	ft_intchr(char *line, int n)
+int			ft_intchr(char *line, int n)
 {
 	if (n == 1)
 		return (ft_intrchr(line));

@@ -1,10 +1,21 @@
-#include "../includes/ft_ls.h"
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_dir_handler.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 14:58:16 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 14:59:17 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int	my_dir(t_files *files)
+#include "../includes/ft_ls.h"
+
+int			my_dir(t_files *files)
 {
-	int	i;
-	int	ret;
+	int		i;
+	int		ret;
 
 	ret = -1;
 	if (S_ISDIR(files->sb.st_mode))
@@ -16,10 +27,10 @@ int	my_dir(t_files *files)
 	return (ret);
 }
 
-void	my_check_dir(t_ls *ls)
+void		my_check_dir(t_ls *ls)
 {
 	t_files *files;
-	int	ret;
+	int		ret;
 
 	my_reverse_list(&(ls->files));
 	files = ls->files;
@@ -33,7 +44,7 @@ void	my_check_dir(t_ls *ls)
 	my_reverse_list(&(ls->files));
 }
 
-bool	my_hidden_file(t_ls *ls, char *name)
+bool		my_hidden_file(t_ls *ls, char *name)
 {
 	if (ls->flags.ignore_backups && name[ft_strlen(name) - 1] == '~')
 		return (false);
@@ -47,15 +58,15 @@ bool	my_hidden_file(t_ls *ls, char *name)
 	return (false);
 }
 
-void	my_readdir(t_ls *ls, t_files *files)
+void		my_readdir(t_ls *ls, t_files *files)
 {
-	char		*path;
+	char			*path;
 	struct dirent	*dirent;
-	DIR		*dir;
+	DIR				*dir;
 
 	path = NULL;
 	if (!(dir = opendir(files->name)))
-		return;
+		return ;
 	if ((ls->flags.recursive || ls->error.args > 1))
 		my_print_dir(ls, files);
 	ls->d.size = 0;
@@ -76,7 +87,7 @@ void	my_readdir(t_ls *ls, t_files *files)
 	closedir(dir);
 }
 
-void	my_opendir(t_ls *ls, t_files *files)
+void		my_opendir(t_ls *ls, t_files *files)
 {
 	(files->type == DIRECTORY) ? my_readdir(ls, files) : 0;
 	if (files->arg && files->type != DIRECTORY)

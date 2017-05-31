@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_print_files.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 15:56:25 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 15:56:58 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_ls.h"
 
 void	my_opt_flags(t_ls *ls, t_files *files, char *name)
@@ -18,8 +30,8 @@ void	my_opt_flags(t_ls *ls, t_files *files, char *name)
 
 void	my_apply_flags(t_ls *ls, t_files *files)
 {
-	char 	*name;
-	int	i;
+	char	*name;
+	int		i;
 
 	i = 0;
 	if (!ls->flags.directory && (name = ft_strrchr(files->name, '/')))

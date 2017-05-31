@@ -22,7 +22,7 @@ CC		=	gcc
 
 FLAGS		= 	-Wall -Werror -Wextra
 
-LIB		= 	-L libft -lft -lacl
+LIB		= 	-L libft -lft
 
 INCLUDE		= 	-I includes
 

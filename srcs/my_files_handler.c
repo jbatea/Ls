@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_files_handler.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 14:59:24 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 14:59:42 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_ls.h"
 
-int	my_filetype(t_files *files)
+int		my_filetype(t_files *files)
 {
 	DIR	*dir;
 
@@ -39,10 +51,10 @@ void	my_check_rdev(t_ls *ls, t_files *new)
 
 	if (new->sb.st_rdev)
 	{
-		(major = ft_itoa(MAJOR(new->sb.st_rdev))) ? 0 : MALLOC;
+		(major = ft_itoa(major(new->sb.st_rdev))) ? 0 : MALLOC;
 		(tmp = ft_strjoin(major, ", ")) ? 0 : MALLOC;
 		ft_strdel(&major);
-		(minor = ft_itoa(MINOR(new->sb.st_rdev))) ? 0 : MALLOC;
+		(minor = ft_itoa(minor(new->sb.st_rdev))) ? 0 : MALLOC;
 		(new->dev = ft_strjoin(tmp, minor)) ? 0 : MALLOC;
 		ft_strdel(&minor);
 		ft_strdel(&tmp);

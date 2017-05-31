@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_cmp.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 14:57:34 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 14:58:08 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_ls.h"
 
-int	my_arg_order(t_files *file1, t_files *file2)
+int		my_arg_order(t_files *file1, t_files *file2)
 {
 	if (file1->arg && file2->arg)
 	{
@@ -12,7 +24,7 @@ int	my_arg_order(t_files *file1, t_files *file2)
 	return (0);
 }
 
-int	my_timecmp(t_files *file1, t_files *file2)
+int		my_timecmp(t_files *file1, t_files *file2)
 {
 	int	i;
 
@@ -20,12 +32,12 @@ int	my_timecmp(t_files *file1, t_files *file2)
 		return (i);
 	if ((i = file2->sb.st_mtime - file1->sb.st_mtime))
 		return (i);
-	if ((i = file2->sb.st_mtim.tv_nsec - file1->sb.st_mtim.tv_nsec))
+	if ((i = file2->sb.st_mtimespec.tv_nsec - file1->sb.st_mtimespec.tv_nsec))
 		return (i);
 	return (ft_strcmp(file1->name, file2->name));
 }
 
-int	my_sizecmp(t_files *file1, t_files *file2)
+int		my_sizecmp(t_files *file1, t_files *file2)
 {
 	int	i;
 
@@ -36,7 +48,7 @@ int	my_sizecmp(t_files *file1, t_files *file2)
 	return (ft_strcmp(file1->name, file2->name));
 }
 
-int	my_argcmp(t_files *file1, t_files *file2)
+int		my_argcmp(t_files *file1, t_files *file2)
 {
 	int	i;
 

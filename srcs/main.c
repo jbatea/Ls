@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 14:54:35 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 14:56:05 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_ls.h"
 
-void	my_exit(t_ls *ls, char *error)
+void		my_exit(t_ls *ls, char *error)
 {
 	(error) ? ft_printf("%s\n", error) : 0;
 	(ls) ? my_del_list(&(ls->queue)) : 0;
 	exit(EXIT_FAILURE);
 }
 
-void	my_help(t_ls *ls)
+void		my_help(t_ls *ls)
 {
 	ft_printf("\n			Ft_printf: Flags Description\n\n");
 	ft_printf("-a, --all\n	do not ignore entries starting with .\n\n");
@@ -21,7 +33,7 @@ void	my_help(t_ls *ls)
 	in a long listing, don't print group names\n\n");
 	ft_printf("-l, --listing\n	use a long listing format\n\n");
 	ft_printf("-o\n	like -l, but do not list group information\n\n");
-	ft_printf("-p, --indicator-style\n \
+	ft_printf("-p, --indicator-style\n\
 	append / indicator to directories\n\n");
 	ft_printf("-Q, --quote-name\n \
 	enclose entry names in double quotes\n\n");
@@ -33,10 +45,10 @@ void	my_help(t_ls *ls)
 	ft_printf("-t, --time\n	sort by modification time, newest first\n\n");
 	ft_printf("-U\n	do not sort; list entries in directory order\n\n");
 	ft_printf("--help\n	display this help and exit\n\n");
-	my_exit(ls, NULL);	
+	my_exit(ls, NULL);
 }
 
-void	my_print_error(t_ls *ls)
+void		my_print_error(t_ls *ls)
 {
 	while (ls->queue && ls->queue->type == ERROR)
 	{
@@ -46,7 +58,7 @@ Permission denied\n", ls->queue->name);
 	}
 }
 
-void	my_ls(t_ls *ls)
+void		my_ls(t_ls *ls)
 {
 	my_print_error(ls);
 	if (ls->queue && ls->queue->name)
@@ -71,7 +83,7 @@ void	my_ls(t_ls *ls)
 	}
 }
 
-int	main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
 	t_ls	ls;
 

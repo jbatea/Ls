@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_sort.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbateau <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/05/31 15:59:44 by jbateau           #+#    #+#             */
+/*   Updated: 2017/05/31 15:59:57 by jbateau          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/ft_ls.h"
 
 void	my_split_list(t_files *files, t_files **f1, t_files **f2)
@@ -56,7 +68,7 @@ void	my_sort(t_ls *ls, t_files **files, int (*cmp)(void *, void *))
 
 	head = *files;
 	if (!head || !head->next)
-		return;
+		return ;
 	my_split_list(head, &f1, &f2);
 	my_sort(ls, &f1, cmp);
 	my_sort(ls, &f2, cmp);
